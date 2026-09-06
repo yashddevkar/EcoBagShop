@@ -10,6 +10,9 @@
     "keywords": [],
     "author": "",
     "license": "ISC",
+    "engines": {
+        "node": ">=24.11.1 <25"
+    },
     "dependencies": {
         "bcryptjs": "^3.0.3",
         "cloudinary": "^2.11.0",
