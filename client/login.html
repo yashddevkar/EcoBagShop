@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | EcoBag Shop</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+
+<body>
+
+
+    <header>
+
+        <div class="logo">
+            🌿 EcoBag Shop
+        </div>
+
+
+        <nav>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="shop.html">
+                Shop
+            </a>
+
+            <a href="login.html" class="active">
+                Login
+            </a>
+
+            <a href="register.html">
+                Register
+            </a>
+
+            <a href="cart.html">
+
+                <i class="fa-solid fa-cart-shopping"></i>
+
+            </a>
+
+            <button id="theme" type="button">
+
+                🌙
+
+            </button>
+
+        </nav>
+
+    </header>
+
+
+
+    <main class="auth-page">
+
+
+        <div class="auth-container">
+
+
+            <div style="
+            text-align:center;
+            margin-bottom:25px;
+        ">
+
+
+                <div style="
+                width:64px;
+                height:64px;
+                margin:0 auto 15px;
+                display:grid;
+                place-items:center;
+                border-radius:50%;
+                background:#edf6ee;
+                color:#1d7442;
+                font-size:28px;
+            ">
+
+                    <i class="fa-solid fa-user"></i>
+
+                </div>
+
+
+                <h1>
+                    Welcome Back
+                </h1>
+
+
+                <p style="
+                color:#68766e;
+                font-size:14px;
+                margin-top:5px;
+            ">
+
+                    Login to continue to EcoBag Shop
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- ================================================= -->
+            <!-- LOGIN FORM -->
+            <!-- ================================================= -->
+
+
+            <form id="loginForm">
+
+
+                <label style="
+                display:block;
+                margin-bottom:7px;
+                color:#183b25;
+                font-size:13px;
+                font-weight:700;
+            ">
+
+                    Email Address
+
+                </label>
+
+
+                <div style="
+                position:relative;
+            ">
+
+
+                    <i class="fa-solid fa-envelope" style="
+                    position:absolute;
+                    left:14px;
+                    top:15px;
+                    color:#78907e;
+                ">
+                    </i>
+
+
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required
+                        style="padding-left:42px;">
+
+
+                </div>
+
+
+
+                <label style="
+                display:block;
+                margin:15px 0 7px;
+                color:#183b25;
+                font-size:13px;
+                font-weight:700;
+            ">
+
+                    Password
+
+                </label>
+
+
+                <div style="
+                position:relative;
+            ">
+
+
+                    <i class="fa-solid fa-lock" style="
+                    position:absolute;
+                    left:14px;
+                    top:15px;
+                    color:#78907e;
+                ">
+                    </i>
+
+
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required
+                        style="padding-left:42px;">
+
+
+                </div>
+
+
+
+                <button type="submit" style="margin-top:20px;">
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+
+                    &nbsp; Login
+
+                </button>
+
+
+            </form>
+
+
+
+            <!-- ================================================= -->
+            <!-- OTP SECTION -->
+            <!-- ================================================= -->
+
+
+            <div id="otpSection" style="
+                display:none;
+                margin-top:25px;
+                padding:20px;
+                background:#f4faf5;
+                border:1px solid #d7eadb;
+                border-radius:12px;
+            ">
+
+
+                <div style="
+                text-align:center;
+                margin-bottom:15px;
+            ">
+
+
+                    <i class="fa-solid fa-envelope-circle-check" style="
+                    font-size:32px;
+                    color:#1d7442;
+                    margin-bottom:10px;
+                ">
+                    </i>
+
+
+                    <h2 style="
+                    margin:5px 0;
+                    color:#183b25;
+                    font-size:20px;
+                ">
+
+                        Verify Your Email
+
+                    </h2>
+
+
+                    <p style="
+                    color:#68766e;
+                    font-size:13px;
+                ">
+
+                        A 6-digit OTP has been
+                        sent to your email.
+
+                    </p>
+
+
+                </div>
+
+
+
+                <label style="
+                display:block;
+                margin-bottom:7px;
+                color:#183b25;
+                font-size:13px;
+                font-weight:700;
+            ">
+
+                    Enter OTP
+
+                </label>
+
+
+                <input type="text" id="otp" maxlength="6" inputmode="numeric" autocomplete="one-time-code"
+                    placeholder="Enter 6-digit OTP" style="
+                    width:100%;
+                    box-sizing:border-box;
+                    text-align:center;
+                    letter-spacing:8px;
+                    font-size:22px;
+                    font-weight:bold;
+                ">
+
+
+                <button type="button" id="verifyOTPButton" style="
+                    width:100%;
+                    margin-top:15px;
+                ">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    &nbsp; Verify OTP
+
+                </button>
+
+
+                <button type="button" id="resendOTPButton" style="
+                    width:100%;
+                    margin-top:10px;
+                    background:#ffffff;
+                    color:#1d7442;
+                    border:1px solid #1d7442;
+                ">
+
+                    <i class="fa-solid fa-rotate"></i>
+
+                    &nbsp; Resend OTP
+
+                </button>
+
+
+                <p style="
+                text-align:center;
+                color:#777;
+                font-size:12px;
+                margin-top:12px;
+            ">
+
+                    OTP is valid for 5 minutes.
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- MESSAGE -->
+
+
+            <div id="message" style="
+                margin-top:15px;
+                text-align:center;
+                font-size:14px;
+                font-weight:600;
+            ">
+            </div>
+
+
+
+            <div style="
+            height:1px;
+            background:#e2e8e2;
+            margin:25px 0;
+        ">
+            </div>
+
+
+
+            <p style="
+            text-align:center;
+            color:#68766e;
+            font-size:14px;
+        ">
+
+                Don't have an account?
+
+
+                <a href="register.html" style="
+                    color:#1d7442;
+                    font-weight:800;
+                ">
+
+                    Create Account
+
+                </a>
+
+
+            </p>
+
+
+        </div>
+
+
+    </main>
+
+
+
+    <footer>
+
+        <p>
+
+            © 2026 EcoBag Shop
+
+            <br>
+
+            Sustainable shopping
+            for a better planet.
+
+        </p>
+
+    </footer>
+
+
+
+    <script src="js/login.js"></script>
+
+    <script src="js/header.js"></script>
+
+    <script src="js/script.js"></script>
+
+
+</body>
+
+</html>

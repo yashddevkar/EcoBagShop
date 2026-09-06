@@ -1,0 +1,14 @@
+{
+  "name": "echobagshop",
+  "version": "1.0.0",
+  "description": "EcoBag Shop Full Stack E-Commerce Website",
+  "scripts": {
+    "server": "npm --prefix server run dev"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "google-auth-library": "^11.0.2",
+    "nodemailer": "^9.0.5"
+  }
+}

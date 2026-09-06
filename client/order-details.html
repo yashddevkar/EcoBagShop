@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Order Details | EcoBag Shop</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+    <header>
+
+        <div class="logo">
+            🌿 EcoBag Shop
+        </div>
+
+        <nav>
+
+            <a href="index.html">Home</a>
+
+            <a href="shop.html">Shop</a>
+
+            <a href="orders.html" class="active">
+                My Orders
+            </a>
+
+            <a href="about.html">About</a>
+
+            <a href="contact.html">Contact</a>
+
+            <a href="cart.html">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="order-details-page">
+
+        <div id="loading">
+            Loading order...
+        </div>
+
+
+        <div id="orderContent" style="display: none;">
+
+            <div class="order-details-header">
+
+                <div>
+
+                    <h1>
+                        Order Details
+                    </h1>
+
+                    <p id="orderDate"></p>
+
+                </div>
+
+                <span id="orderStatus" class="order-status">
+                </span>
+
+            </div>
+
+
+            <!-- TRACKING -->
+
+            <section class="tracking-card">
+
+                <h2>
+                    Order Tracking
+                </h2>
+
+
+                <div class="tracking">
+
+                    <div class="tracking-step" id="stepPlaced">
+
+                        <div class="tracking-circle">
+                            ✓
+                        </div>
+
+                        <p>
+                            Order Placed
+                        </p>
+
+                    </div>
+
+
+                    <div class="tracking-line"></div>
+
+
+                    <div class="tracking-step" id="stepConfirmed">
+
+                        <div class="tracking-circle">
+                            2
+                        </div>
+
+                        <p>
+                            Confirmed
+                        </p>
+
+                    </div>
+
+
+                    <div class="tracking-line"></div>
+
+
+                    <div class="tracking-step" id="stepPacked">
+
+                        <div class="tracking-circle">
+                            3
+                        </div>
+
+                        <p>
+                            Packed
+                        </p>
+
+                    </div>
+
+
+                    <div class="tracking-line"></div>
+
+
+                    <div class="tracking-step" id="stepShipped">
+
+                        <div class="tracking-circle">
+                            4
+                        </div>
+
+                        <p>
+                            Shipped
+                        </p>
+
+                    </div>
+
+
+                    <div class="tracking-line"></div>
+
+
+                    <div class="tracking-step" id="stepDelivered">
+
+                        <div class="tracking-circle">
+                            5
+                        </div>
+
+                        <p>
+                            Delivered
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <div class="order-details-grid">
+
+
+                <!-- PRODUCTS -->
+
+                <section class="details-card">
+
+                    <h2>
+                        Products
+                    </h2>
+
+                    <div id="orderProducts"></div>
+
+                </section>
+
+
+                <!-- DELIVERY -->
+
+                <section class="details-card">
+
+                    <h2>
+                        Delivery Address
+                    </h2>
+
+                    <div id="deliveryAddress"></div>
+
+                </section>
+
+
+                <!-- PAYMENT -->
+
+                <section class="details-card">
+
+                    <h2>
+                        Payment
+                    </h2>
+
+                    <div id="paymentDetails"></div>
+
+                </section>
+
+
+                <!-- SUMMARY -->
+
+                <section class="details-card">
+
+                    <h2>
+                        Price Details
+                    </h2>
+
+                    <div id="priceDetails"></div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+        © 2026 EcoBag Shop
+    </footer>
+
+
+    <script src="js/header.js"></script>
+    <script src="js/order-details.js"></script>
+
+</body>
+
+</html>

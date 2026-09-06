@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Checkout | EcoBag Shop
+    </title>
+
+
+    <link rel="stylesheet" href="css/style.css">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+
+    <style>
+        /* =====================================================
+           CHECKOUT PAGE
+        ===================================================== */
+
+        .checkout-page {
+
+            max-width: 1150px;
+
+            margin: 0 auto;
+
+            padding: 40px 20px 60px;
+
+        }
+
+
+        .checkout-heading {
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .checkout-heading span {
+
+            color: #1d7442;
+
+            font-size: 12px;
+
+            font-weight: 800;
+
+            letter-spacing: 2px;
+
+        }
+
+
+        .checkout-heading h1 {
+
+            margin: 8px 0;
+
+            color: #183b25;
+
+        }
+
+
+        .checkout-heading p {
+
+            color: #68766e;
+
+        }
+
+
+        /* =====================================================
+           LAYOUT
+        ===================================================== */
+
+        .checkout-layout {
+
+            display: grid;
+
+            grid-template-columns:
+                1.5fr 1fr;
+
+            gap: 30px;
+
+        }
+
+
+        /* =====================================================
+           CARDS
+        ===================================================== */
+
+        .checkout-card {
+
+            background: white;
+
+            border: 1px solid #e1e9e2;
+
+            border-radius: 16px;
+
+            padding: 25px;
+
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 7px 22px rgba(0, 0, 0, 0.06);
+
+        }
+
+
+        .checkout-card h2 {
+
+            margin-top: 0;
+
+            color: #183b25;
+
+            font-size: 20px;
+
+        }
+
+
+        .checkout-card h2 i {
+
+            color: #1d7442;
+
+            margin-right: 8px;
+
+        }
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .checkout-form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 15px;
+
+        }
+
+
+        .checkout-field {
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .checkout-field.full {
+
+            grid-column: 1 / -1;
+
+        }
+
+
+        .checkout-field label {
+
+            display: block;
+
+            margin-bottom: 6px;
+
+            color: #183b25;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+        }
+
+
+        .checkout-field input,
+
+        .checkout-field textarea,
+
+        .checkout-field select {
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 12px;
+
+            border: 1px solid #d4dfd6;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            outline: none;
+
+        }
+
+
+        .checkout-field textarea {
+
+            min-height: 90px;
+
+            resize: vertical;
+
+        }
+
+
+        .checkout-field input:focus,
+
+        .checkout-field textarea:focus,
+
+        .checkout-field select:focus {
+
+            border-color: #1d7442;
+
+            box-shadow:
+                0 0 0 3px rgba(29, 116, 66, 0.10);
+
+        }
+
+
+        /* =====================================================
+           PAYMENT
+        ===================================================== */
+
+        .payment-option {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 14px;
+
+            margin-bottom: 10px;
+
+            border: 1px solid #dce5de;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+        }
+
+
+        .payment-option:hover {
+
+            background: #f7faf7;
+
+        }
+
+
+        .payment-option input {
+
+            accent-color: #1d7442;
+
+        }
+
+
+        .payment-icon {
+
+            color: #1d7442;
+
+            width: 25px;
+
+            text-align: center;
+
+        }
+
+
+        .payment-info strong {
+
+            display: block;
+
+            color: #183b25;
+
+        }
+
+
+        .payment-info span {
+
+            display: block;
+
+            color: #68766e;
+
+            font-size: 12px;
+
+            margin-top: 3px;
+
+        }
+
+
+        /* =====================================================
+           ORDER SUMMARY
+        ===================================================== */
+
+        .order-summary {
+
+            position: sticky;
+
+            top: 20px;
+
+        }
+
+
+        .summary-item {
+
+            display: flex;
+
+            gap: 12px;
+
+            padding: 12px 0;
+
+            border-bottom: 1px solid #edf1ed;
+
+        }
+
+
+        .summary-image {
+
+            width: 65px;
+
+            height: 65px;
+
+            border-radius: 8px;
+
+            overflow: hidden;
+
+            background: #f2f6f2;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+
+        .summary-image img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+
+        }
+
+
+        .summary-image-placeholder {
+
+            font-size: 28px;
+
+        }
+
+
+        .summary-item-info {
+
+            flex: 1;
+
+        }
+
+
+        .summary-item-info strong {
+
+            display: block;
+
+            color: #183b25;
+
+            font-size: 14px;
+
+        }
+
+
+        .summary-item-info span {
+
+            display: block;
+
+            color: #68766e;
+
+            font-size: 12px;
+
+            margin-top: 4px;
+
+        }
+
+
+        .summary-item-price {
+
+            font-weight: 800;
+
+            color: #183b25;
+
+            white-space: nowrap;
+
+        }
+
+
+        .checkout-summary-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            padding: 10px 0;
+
+            color: #68766e;
+
+        }
+
+
+        .checkout-summary-row strong {
+
+            color: #183b25;
+
+        }
+
+
+        .checkout-total {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            border-top: 1px solid #dce5de;
+
+            margin-top: 10px;
+
+            padding-top: 18px;
+
+        }
+
+
+        .checkout-total span {
+
+            color: #183b25;
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+        }
+
+
+        .checkout-total strong {
+
+            color: #1d7442;
+
+            font-size: 24px;
+
+        }
+
+
+        /* =====================================================
+           PLACE ORDER
+        ===================================================== */
+
+        .place-order-btn {
+
+            width: 100%;
+
+            margin-top: 20px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #1d7442;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+        }
+
+
+        .place-order-btn:hover {
+
+            background: #155a31;
+
+        }
+
+
+        .place-order-btn:disabled {
+
+            opacity: 0.6;
+
+            cursor: not-allowed;
+
+        }
+
+
+        .checkout-security {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            background: #f4f8f4;
+
+            border-radius: 8px;
+
+            color: #68766e;
+
+            font-size: 12px;
+
+        }
+
+
+        .checkout-security i {
+
+            color: #1d7442;
+
+            font-size: 18px;
+
+        }
+
+
+        /* =====================================================
+           MESSAGE
+        ===================================================== */
+
+        #checkoutMessage {
+
+            margin-bottom: 20px;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            display: none;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+        }
+
+
+        #checkoutMessage.success {
+
+            display: block;
+
+            background: #eaf6ed;
+
+            color: #176438;
+
+        }
+
+
+        #checkoutMessage.error {
+
+            display: block;
+
+            background: #fff0ee;
+
+            color: #a93226;
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media(max-width: 800px) {
+
+            .checkout-layout {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .order-summary {
+
+                position: static;
+
+            }
+
+        }
+
+
+        @media(max-width: 550px) {
+
+            .checkout-form-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .checkout-field.full {
+
+                grid-column: auto;
+
+            }
+
+
+            .checkout-card {
+
+                padding: 18px;
+
+            }
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ===================================================== -->
+
+    <header>
+
+        <div class="logo">
+
+            🌿 EcoBag Shop
+
+        </div>
+
+
+        <nav>
+
+            <a href="index.html">
+                Home
+            </a>
+
+
+            <a href="shop.html">
+                Shop
+            </a>
+
+
+            <a href="orders.html">
+                My Orders
+            </a>
+
+
+            <a href="cart.html">
+                <i class="fa-solid fa-cart-shopping"></i>
+                Cart
+            </a>
+
+
+            <a href="login.html" id="loginLink">
+                Login
+            </a>
+
+
+            <a href="register.html" id="registerLink">
+                Register
+            </a>
+
+
+            <div id="userMenu" class="user-menu" style="display:none;">
+
+                <button class="account-button" type="button">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    Account
+
+                    <i class="fa-solid fa-chevron-down"></i>
+
+                </button>
+
+
+                <div class="account-dropdown">
+
+                    <a href="orders.html">
+
+                        <i class="fa-solid fa-box"></i>
+
+                        My Orders
+
+                    </a>
+
+
+                    <button type="button" onclick="logout()">
+
+                        <i class="fa-solid fa-right-from-bracket"></i>
+
+                        Logout
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <button id="theme" type="button">
+                🌙
+            </button>
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         CHECKOUT
+    ===================================================== -->
+
+    <main class="checkout-page">
+
+
+        <section class="checkout-heading">
+
+            <span>
+                SECURE CHECKOUT
+            </span>
+
+
+            <h1>
+                Complete Your Order
+            </h1>
+
+
+            <p>
+                Enter your delivery details and
+                choose your preferred payment method.
+            </p>
+
+        </section>
+
+
+
+        <div id="checkoutMessage"></div>
+
+
+
+        <section class="checkout-layout">
+
+
+            <!-- =================================================
+                 LEFT
+            ================================================= -->
+
+            <div>
+
+
+                <!-- DELIVERY ADDRESS -->
+
+                <div class="checkout-card">
+
+
+                    <h2>
+
+                        <i class="fa-solid fa-location-dot"></i>
+
+                        Delivery Address
+
+                    </h2>
+
+
+                    <form id="checkoutForm">
+
+
+                        <div class="checkout-form-grid">
+
+
+                            <!-- NAME -->
+
+                            <div class="checkout-field">
+
+                                <label>
+                                    Full Name
+                                </label>
+
+
+                                <input type="text" id="customerName" required placeholder="Enter your full name">
+
+                            </div>
+
+
+
+                            <!-- PHONE -->
+
+                            <div class="checkout-field">
+
+                                <label>
+                                    Phone Number
+                                </label>
+
+
+                                <input type="tel" id="customerPhone" required maxlength="10"
+                                    placeholder="10-digit mobile number">
+
+                            </div>
+
+
+
+                            <!-- ADDRESS -->
+
+                            <div class="checkout-field full">
+
+                                <label>
+                                    Address
+                                </label>
+
+
+                                <textarea id="customerAddress" required
+                                    placeholder="House/Room number, Street, Area"></textarea>
+
+                            </div>
+
+
+
+                            <!-- CITY -->
+
+                            <div class="checkout-field">
+
+                                <label>
+                                    City
+                                </label>
+
+
+                                <input type="text" id="customerCity" required placeholder="City">
+
+                            </div>
+
+
+
+                            <!-- STATE -->
+
+                            <div class="checkout-field">
+
+                                <label>
+                                    State
+                                </label>
+
+
+                                <input type="text" id="customerState" required placeholder="State">
+
+                            </div>
+
+
+
+                            <!-- PIN -->
+
+                            <div class="checkout-field">
+
+                                <label>
+                                    PIN Code
+                                </label>
+
+
+                                <input type="text" id="customerPin" required maxlength="6" placeholder="6-digit PIN">
+
+                            </div>
+
+
+
+                            <!-- LANDMARK -->
+
+                            <div class="checkout-field">
+
+                                <label>
+                                    Landmark
+                                </label>
+
+
+                                <input type="text" id="customerLandmark" placeholder="Optional">
+
+                            </div>
+
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+
+
+                <!-- PAYMENT -->
+
+                <div class="checkout-card">
+
+
+                    <h2>
+
+                        <i class="fa-solid fa-credit-card"></i>
+
+                        Payment Method
+
+                    </h2>
+
+
+
+                    <label class="payment-option">
+
+                        <input type="radio" name="paymentMethod" value="COD" checked>
+
+
+                        <div class="payment-icon">
+
+                            <i class="fa-solid fa-money-bill-wave"></i>
+
+                        </div>
+
+
+                        <div class="payment-info">
+
+                            <strong>
+                                Cash on Delivery
+                            </strong>
+
+                            <span>
+                                Pay when your order arrives
+                            </span>
+
+                        </div>
+
+                    </label>
+
+
+
+                    <label class="payment-option">
+
+                        <input type="radio" name="paymentMethod" value="UPI">
+
+
+                        <div class="payment-icon">
+
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+
+                        </div>
+
+
+                        <div class="payment-info">
+
+                            <strong>
+                                UPI
+                            </strong>
+
+                            <span>
+                                Demo payment option
+                            </span>
+
+                        </div>
+
+                    </label>
+
+
+
+                    <label class="payment-option">
+
+                        <input type="radio" name="paymentMethod" value="CARD">
+
+
+                        <div class="payment-icon">
+
+                            <i class="fa-solid fa-credit-card"></i>
+
+                        </div>
+
+
+                        <div class="payment-info">
+
+                            <strong>
+                                Credit / Debit Card
+                            </strong>
+
+                            <span>
+                                Demo payment option
+                            </span>
+
+                        </div>
+
+                    </label>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RIGHT - ORDER SUMMARY
+            ================================================= -->
+
+            <aside class="checkout-card order-summary">
+
+
+                <h2>
+
+                    <i class="fa-solid fa-receipt"></i>
+
+                    Order Summary
+
+                </h2>
+
+
+                <div id="checkoutItems">
+
+                </div>
+
+
+                <!-- SUBTOTAL -->
+
+                <div class="checkout-summary-row">
+
+                    <span>
+                        Subtotal
+                    </span>
+
+
+                    <strong id="checkoutSubtotal">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+
+                <!-- DELIVERY -->
+
+                <div class="checkout-summary-row">
+
+                    <span>
+                        Delivery
+                    </span>
+
+
+                    <strong id="checkoutDelivery">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+
+                <!-- TOTAL -->
+
+                <div class="checkout-total">
+
+                    <span>
+                        Total
+                    </span>
+
+
+                    <strong id="checkoutTotal">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+
+                <!-- PLACE ORDER -->
+
+                <button type="button" id="placeOrderBtn" class="place-order-btn">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    Place Order
+
+                </button>
+
+
+
+                <div class="checkout-security">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+
+                    <span>
+
+                        Your order information is
+                        securely processed.
+
+                    </span>
+
+                </div>
+
+
+            </aside>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ===================================================== -->
+
+    <footer>
+
+        <div class="footer-content">
+
+
+            <div class="footer-brand">
+
+                <div class="footer-logo">
+
+                    🌿 EcoBag Shop
+
+                </div>
+
+
+                <p>
+
+                    Sustainable shopping for
+                    a greener tomorrow.
+
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <h3>
+                    Quick Links
+                </h3>
+
+
+                <a href="index.html">
+                    Home
+                </a>
+
+
+                <a href="shop.html">
+                    Shop
+                </a>
+
+
+                <a href="orders.html">
+                    My Orders
+                </a>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <h3>
+                    Support
+                </h3>
+
+
+                <a href="about.html">
+                    About Us
+                </a>
+
+
+                <a href="contact.html">
+                    Contact
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+
+                © 2026 EcoBag Shop.
+                All Rights Reserved.
+
+            </p>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ===================================================== -->
+
+    <script src="js/header.js"></script>
+
+    <script src="js/checkout.js"></script>
+
+
+</body>
+
+</html>

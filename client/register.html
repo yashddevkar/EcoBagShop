@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | EcoBag Shop</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <div class="logo">
+            🌿 EcoBag Shop
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="shop.html">
+                Shop
+            </a>
+
+            <a href="login.html">
+                Login
+            </a>
+
+            <a href="register.html" class="active">
+                Register
+            </a>
+
+            <a href="cart.html">
+
+                <i class="fa-solid fa-cart-shopping"></i>
+
+            </a>
+
+            <button id="theme" type="button">
+                🌙
+            </button>
+
+        </nav>
+
+    </header>
+
+
+    <!-- ================= REGISTER PAGE ================= -->
+
+    <main class="auth-page">
+
+        <div class="auth-container">
+
+            <div style="
+                text-align:center;
+                margin-bottom:25px;
+            ">
+
+                <div style="
+                    width:64px;
+                    height:64px;
+                    margin:0 auto 15px;
+                    display:grid;
+                    place-items:center;
+                    border-radius:50%;
+                    background:#edf6ee;
+                    color:#1d7442;
+                    font-size:28px;
+                ">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                </div>
+
+
+                <h1>
+                    Create Account
+                </h1>
+
+
+                <p style="
+                    color:#68766e;
+                    font-size:14px;
+                    margin-top:5px;
+                ">
+
+                    Join EcoBag Shop and shop sustainably.
+
+                </p>
+
+            </div>
+
+
+            <form id="registerForm">
+
+                <!-- FULL NAME -->
+
+                <label style="
+                    display:block;
+                    margin-bottom:7px;
+                    color:#183b25;
+                    font-size:13px;
+                    font-weight:700;
+                ">
+
+                    Full Name
+
+                </label>
+
+
+                <div style="position:relative;">
+
+                    <i class="fa-solid fa-user" style="
+                           position:absolute;
+                           left:14px;
+                           top:15px;
+                           color:#78907e;
+                       ">
+                    </i>
+
+
+                    <input type="text" id="name" name="name" placeholder="Enter your full name" required
+                        style="padding-left:42px;">
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <label style="
+                    display:block;
+                    margin:2px 0 7px;
+                    color:#183b25;
+                    font-size:13px;
+                    font-weight:700;
+                ">
+
+                    Email Address
+
+                </label>
+
+
+                <div style="position:relative;">
+
+                    <i class="fa-solid fa-envelope" style="
+                           position:absolute;
+                           left:14px;
+                           top:15px;
+                           color:#78907e;
+                       ">
+                    </i>
+
+
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required
+                        style="padding-left:42px;">
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <label style="
+                    display:block;
+                    margin:2px 0 7px;
+                    color:#183b25;
+                    font-size:13px;
+                    font-weight:700;
+                ">
+
+                    Password
+
+                </label>
+
+
+                <div style="position:relative;">
+
+                    <i class="fa-solid fa-lock" style="
+                           position:absolute;
+                           left:14px;
+                           top:15px;
+                           color:#78907e;
+                       ">
+                    </i>
+
+
+                    <input type="password" id="password" name="password" placeholder="Create a password" required
+                        style="padding-left:42px;">
+
+                </div>
+
+
+                <!-- PHONE -->
+
+                <label style="
+                    display:block;
+                    margin:2px 0 7px;
+                    color:#183b25;
+                    font-size:13px;
+                    font-weight:700;
+                ">
+
+                    Phone Number
+
+                </label>
+
+
+                <div style="position:relative;">
+
+                    <i class="fa-solid fa-phone" style="
+                           position:absolute;
+                           left:14px;
+                           top:15px;
+                           color:#78907e;
+                       ">
+                    </i>
+
+
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required
+                        style="padding-left:42px;">
+
+                </div>
+
+
+                <!-- ADDRESS -->
+
+                <label style="
+                    display:block;
+                    margin:2px 0 7px;
+                    color:#183b25;
+                    font-size:13px;
+                    font-weight:700;
+                ">
+
+                    Address
+
+                </label>
+
+
+                <div style="position:relative;">
+
+                    <i class="fa-solid fa-location-dot" style="
+                           position:absolute;
+                           left:14px;
+                           top:15px;
+                           color:#78907e;
+                       ">
+                    </i>
+
+
+                    <textarea id="address" name="address" placeholder="Enter your address" rows="3" required style="
+                            padding-left:42px;
+                            resize:vertical;
+                        "></textarea>
+
+                </div>
+
+
+                <!-- REGISTER BUTTON -->
+
+                <button type="submit">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                    &nbsp; Create Account
+
+                </button>
+
+            </form>
+
+
+            <div id="message" style="
+                     margin-top:15px;
+                     text-align:center;
+                     font-size:14px;
+                     font-weight:600;
+                 ">
+            </div>
+
+
+            <div style="
+                height:1px;
+                background:#e2e8e2;
+                margin:25px 0;
+            ">
+            </div>
+
+
+            <p style="
+                text-align:center;
+                color:#68766e;
+                font-size:14px;
+            ">
+
+                Already have an account?
+
+                <a href="login.html" style="
+                       color:#1d7442;
+                       font-weight:800;
+                   ">
+
+                    Login
+
+                </a>
+
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <p>
+            © 2026 EcoBag Shop
+            <br>
+            Sustainable shopping for a better planet.
+        </p>
+
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="js/register.js"></script>
+
+    <script src="js/header.js"></script>
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>

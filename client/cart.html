@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Shopping Cart | EcoBag Shop
+    </title>
+
+
+    <link rel="stylesheet" href="css/style.css">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+
+    <style>
+        /* =====================================================
+           CART ITEMS
+        ===================================================== */
+
+        .premium-cart-item {
+
+            display: grid;
+
+            grid-template-columns:
+                130px 1fr auto;
+
+            gap: 20px;
+
+            align-items: center;
+
+            background: white;
+
+            padding: 20px;
+
+            margin-bottom: 18px;
+
+            border-radius: 16px;
+
+            border: 1px solid #e3ebe4;
+
+            box-shadow:
+                0 6px 20px rgba(0, 0, 0, 0.06);
+
+        }
+
+
+        /* =====================================================
+           PRODUCT IMAGE
+        ===================================================== */
+
+        .premium-cart-image {
+
+            width: 120px;
+
+            height: 120px;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            background: #f3f7f3;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+
+        .premium-cart-image img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+
+        }
+
+
+        .custom-bag-placeholder {
+
+            font-size: 45px;
+
+        }
+
+
+        /* =====================================================
+           PRODUCT INFORMATION
+        ===================================================== */
+
+        .premium-cart-info h3 {
+
+            margin: 0 0 10px;
+
+            color: #183b25;
+
+            font-size: 18px;
+
+        }
+
+
+        .premium-cart-info p {
+
+            margin: 6px 0;
+
+            color: #68766e;
+
+            font-size: 14px;
+
+        }
+
+
+        .premium-cart-info strong {
+
+            color: #183b25;
+
+        }
+
+
+        .custom-design-label {
+
+            display: inline-block;
+
+            margin-top: 8px;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            background: #edf6ee;
+
+            color: #1d7442;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+        }
+
+
+        /* =====================================================
+           PRICE
+        ===================================================== */
+
+        .premium-cart-price {
+
+            color: #1d7442 !important;
+
+            font-size: 17px !important;
+
+            font-weight: 800;
+
+        }
+
+
+        .premium-cart-item-total {
+
+            color: #183b25;
+
+            font-size: 18px;
+
+            font-weight: 800;
+
+            white-space: nowrap;
+
+        }
+
+
+        /* =====================================================
+           QUANTITY
+        ===================================================== */
+
+        .premium-cart-actions {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            margin-top: 12px;
+
+        }
+
+
+        .quantity-btn {
+
+            width: 32px;
+
+            height: 32px;
+
+            border: 1px solid #d2ddd4;
+
+            background: white;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            color: #183b25;
+
+        }
+
+
+        .quantity-btn:hover {
+
+            background: #edf6ee;
+
+        }
+
+
+        .quantity-number {
+
+            min-width: 25px;
+
+            text-align: center;
+
+            font-weight: 700;
+
+        }
+
+
+        .remove-cart-btn {
+
+            margin-left: 12px;
+
+            border: 1px solid #e2b7b2;
+
+            background: white;
+
+            color: #c0392b;
+
+            padding: 8px 11px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-weight: 700;
+
+        }
+
+
+        .remove-cart-btn:hover {
+
+            background: #fff2f0;
+
+        }
+
+
+        /* =====================================================
+           CUSTOM DESIGN DETAILS
+        ===================================================== */
+
+        .custom-design-details {
+
+            margin-top: 10px;
+
+            padding: 10px 12px;
+
+            background: #f7faf7;
+
+            border-radius: 8px;
+
+            border-left: 3px solid #1d7442;
+
+        }
+
+
+        .custom-design-details p {
+
+            margin: 4px 0;
+
+            font-size: 13px;
+
+        }
+
+
+        .cart-color-circle {
+
+            display: inline-block;
+
+            width: 15px;
+
+            height: 15px;
+
+            border-radius: 50%;
+
+            vertical-align: middle;
+
+            border: 1px solid #999;
+
+            margin-left: 4px;
+
+        }
+
+
+        /* =====================================================
+           EMPTY CART
+        ===================================================== */
+
+        .premium-empty-cart {
+
+            text-align: center;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media(max-width: 700px) {
+
+            .premium-cart-item {
+
+                grid-template-columns:
+                    90px 1fr;
+
+                gap: 12px;
+
+            }
+
+
+            .premium-cart-image {
+
+                width: 85px;
+
+                height: 85px;
+
+            }
+
+
+            .premium-cart-item-total {
+
+                grid-column: 2;
+
+            }
+
+
+            .premium-cart-actions {
+
+                flex-wrap: wrap;
+
+            }
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ===================================================== -->
+
+    <header>
+
+
+        <div class="logo">
+
+            🌿 EcoBag Shop
+
+        </div>
+
+
+        <nav>
+
+
+            <a href="index.html">
+
+                Home
+
+            </a>
+
+
+            <a href="shop.html">
+
+                Shop
+
+            </a>
+
+
+            <a href="orders.html">
+
+                My Orders
+
+            </a>
+
+
+            <a href="cart.html" class="active">
+
+                <i class="fa-solid fa-cart-shopping"></i>
+
+                Cart
+
+            </a>
+
+
+            <a href="login.html" id="loginLink">
+
+                Login
+
+            </a>
+
+
+            <a href="register.html" id="registerLink">
+
+                Register
+
+            </a>
+
+
+            <!-- USER MENU -->
+
+            <div id="userMenu" class="user-menu" style="display:none;">
+
+
+                <button class="account-button" type="button">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    Account
+
+                    <i class="fa-solid fa-chevron-down"></i>
+
+                </button>
+
+
+                <div class="account-dropdown">
+
+
+                    <a href="orders.html">
+
+                        <i class="fa-solid fa-box"></i>
+
+                        My Orders
+
+                    </a>
+
+
+                    <button type="button" onclick="logout()">
+
+                        <i class="fa-solid fa-right-from-bracket"></i>
+
+                        Logout
+
+                    </button>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- THEME -->
+
+            <button id="theme" type="button">
+
+                🌙
+
+            </button>
+
+
+        </nav>
+
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAIN CART
+    ===================================================== -->
+
+    <main class="premium-cart-page">
+
+
+        <!-- =================================================
+             CART HEADING
+        ================================================= -->
+
+        <section class="cart-heading">
+
+
+            <span class="cart-eyebrow">
+
+                YOUR COLLECTION
+
+            </span>
+
+
+            <h1>
+
+                Shopping Cart
+
+            </h1>
+
+
+            <p>
+
+                Review your selected eco-friendly
+                products before checkout.
+
+            </p>
+
+
+            <div class="cart-item-count">
+
+
+                <i class="fa-solid fa-bag-shopping"></i>
+
+
+                <span id="totalItems">
+
+                    0
+
+                </span>
+
+
+                items in your cart
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             CART LAYOUT
+        ================================================= -->
+
+        <section class="cart-layout">
+
+
+            <!-- =================================================
+                 LEFT SIDE
+            ================================================= -->
+
+            <div class="cart-left">
+
+
+                <!-- CART ITEMS -->
+
+                <div id="cartItems" class="premium-cart-items">
+
+                </div>
+
+
+
+                <!-- EMPTY CART -->
+
+                <div id="emptyCart" class="premium-empty-cart" style="display:none;">
+
+
+                    <div class="empty-cart-icon">
+
+
+                        <i class="fa-solid fa-bag-shopping"></i>
+
+
+                    </div>
+
+
+                    <h2>
+
+                        Your cart is empty
+
+                    </h2>
+
+
+                    <p>
+
+                        You haven't added any products yet.
+
+                        Discover our eco-friendly collection
+                        and start shopping.
+
+                    </p>
+
+
+                    <a href="shop.html" class="premium-shop-button">
+
+                        Explore Products
+
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+
+                    </a>
+
+
+                </div>
+
+
+
+                <!-- CONTINUE SHOPPING -->
+
+                <a href="shop.html" class="cart-back-shop">
+
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+
+                    Continue Shopping
+
+
+                </a>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RIGHT SIDE SUMMARY
+            ================================================= -->
+
+            <aside id="cartSummary" class="premium-cart-summary" style="display:none;">
+
+
+                <!-- SUMMARY HEADER -->
+
+                <div class="summary-heading">
+
+
+                    <h2>
+
+                        Order Summary
+
+                    </h2>
+
+
+                    <span>
+
+                        SECURE
+
+                    </span>
+
+
+                </div>
+
+
+
+                <!-- SUBTOTAL -->
+
+                <div class="summary-row">
+
+
+                    <span>
+
+                        Subtotal
+
+                    </span>
+
+
+                    <strong id="subtotal">
+
+                        ₹0
+
+                    </strong>
+
+
+                </div>
+
+
+
+                <!-- DELIVERY -->
+
+                <div class="summary-row">
+
+
+                    <span>
+
+                        Delivery
+
+                    </span>
+
+
+                    <strong id="delivery">
+
+                        ₹0
+
+                    </strong>
+
+
+                </div>
+
+
+
+                <!-- FREE DELIVERY -->
+
+                <div class="free-delivery-message">
+
+
+                    <i class="fa-solid fa-truck"></i>
+
+
+                    <span>
+
+                        Free delivery on orders above ₹500
+
+                    </span>
+
+
+                </div>
+
+
+
+                <div class="summary-divider"></div>
+
+
+
+                <!-- TOTAL -->
+
+                <div class="summary-total">
+
+
+                    <span>
+
+                        Total
+
+                    </span>
+
+
+                    <strong id="total">
+
+                        ₹0
+
+                    </strong>
+
+
+                </div>
+
+
+
+                <!-- CHECKOUT -->
+
+                <button class="premium-checkout-btn" type="button" onclick="checkout()">
+
+                    Proceed to Checkout
+
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+
+                </button>
+
+
+
+                <!-- SECURITY -->
+
+                <div class="secure-checkout">
+
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+
+                    <div>
+
+
+                        <strong>
+
+                            Secure Checkout
+
+                        </strong>
+
+
+                        <span>
+
+                            Your information is protected
+
+                        </span>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- PAYMENT METHODS -->
+
+                <div class="payment-icons">
+
+
+                    <span>
+
+                        UPI
+
+                    </span>
+
+
+                    <span>
+
+                        VISA
+
+                    </span>
+
+
+                    <span>
+
+                        RuPay
+
+                    </span>
+
+
+                    <span>
+
+                        COD
+
+                    </span>
+
+
+                </div>
+
+
+            </aside>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ===================================================== -->
+
+    <footer>
+
+
+        <div class="footer-content">
+
+
+            <!-- BRAND -->
+
+            <div class="footer-brand">
+
+
+                <div class="footer-logo">
+
+                    🌿 EcoBag Shop
+
+                </div>
+
+
+                <p>
+
+                    Sustainable shopping for a greener
+                    tomorrow.
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- QUICK LINKS -->
+
+            <div class="footer-links">
+
+
+                <h3>
+
+                    Quick Links
+
+                </h3>
+
+
+                <a href="index.html">
+
+                    Home
+
+                </a>
+
+
+                <a href="shop.html">
+
+                    Shop
+
+                </a>
+
+
+                <a href="orders.html">
+
+                    My Orders
+
+                </a>
+
+
+            </div>
+
+
+
+            <!-- SUPPORT -->
+
+            <div class="footer-links">
+
+
+                <h3>
+
+                    Support
+
+                </h3>
+
+
+                <a href="about.html">
+
+                    About Us
+
+                </a>
+
+
+                <a href="contact.html">
+
+                    Contact
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="footer-bottom">
+
+
+            <p>
+
+                © 2026 EcoBag Shop.
+                All Rights Reserved.
+
+            </p>
+
+
+        </div>
+
+
+    </footer>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ===================================================== -->
+
+    <script src="js/header.js"></script>
+
+    <script src="js/cart.js"></script>
+
+
+</body>
+
+</html>

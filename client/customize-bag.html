@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Customize your eco-friendly bag with your own image, text and color.">
+
+    <title>Customize Your Bag | EcoBag Shop</title>
+
+    <!-- Main Website CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =====================================================
+           CUSTOMIZER PAGE
+        ===================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Poppins", Arial, sans-serif;
+            background: #f7f8f5;
+            color: #222;
+        }
+
+        .customizer-page {
+            width: 100%;
+            min-height: 100vh;
+            padding: 40px 20px 70px;
+        }
+
+        .customizer-container {
+            width: min(1200px, 100%);
+            margin: 0 auto;
+        }
+
+        /* =====================================================
+           PAGE HEADER
+        ===================================================== */
+
+        .customizer-heading {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .customizer-heading h1 {
+            margin: 0 0 10px;
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .customizer-heading p {
+            margin: 0;
+            color: #666;
+            font-size: 15px;
+        }
+
+        /* =====================================================
+           MAIN GRID
+        ===================================================== */
+
+        .customizer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .customizer-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+            border: 1px solid #e9ece5;
+        }
+
+        .customizer-card h2 {
+            margin: 0 0 22px;
+            font-size: 21px;
+        }
+
+        /* =====================================================
+           BAG PREVIEW
+        ===================================================== */
+
+        .preview-card {
+            position: sticky;
+            top: 25px;
+        }
+
+        .preview-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px 10px;
+        }
+
+        #bagShape {
+            width: 320px;
+            height: 360px;
+            position: relative;
+            background: #f7f7f7;
+            border-radius: 8px 8px 18px 18px;
+            border: 2px solid #ddd;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            transition: background-color 0.2s ease;
+        }
+
+        /* Bag top opening */
+
+        #bagShape::before {
+            content: "";
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            top: 0;
+            height: 12px;
+            background: rgba(0, 0, 0, 0.08);
+            border-radius: 0 0 10px 10px;
+            z-index: 1;
+        }
+
+        /* =====================================================
+           BAG HANDLE
+        ===================================================== */
+
+        #bagHandle {
+            position: absolute;
+            width: 145px;
+            height: 95px;
+            left: 50%;
+            top: -62px;
+            transform: translateX(-50%);
+            border: 9px solid #999;
+            border-bottom: 0;
+            border-radius: 90px 90px 0 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* =====================================================
+           UPLOADED IMAGE
+        ===================================================== */
+
+        #uploadedImage {
+            position: absolute;
+            display: none;
+            left: 75px;
+            top: 70px;
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            cursor: move;
+            user-select: none;
+            touch-action: none;
+            z-index: 5;
+        }
+
+        /* =====================================================
+           CUSTOM TEXT
+        ===================================================== */
+
+        #customText {
+            position: absolute;
+            left: 70px;
+            top: 230px;
+            max-width: 180px;
+            font-size: 24px;
+            font-weight: 600;
+            color: #000;
+            text-align: center;
+            cursor: move;
+            user-select: none;
+            touch-action: none;
+            word-break: break-word;
+            z-index: 6;
+        }
+
+        /* =====================================================
+           PRICE
+        ===================================================== */
+
+        .price-box {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .price-label {
+            display: block;
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        #price {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group select,
+        .form-group input[type="text"],
+        .form-group input[type="range"] {
+            width: 100%;
+        }
+
+        .form-group select,
+        .form-group input[type="text"] {
+            height: 46px;
+            border: 1px solid #d9ddd5;
+            border-radius: 9px;
+            padding: 0 13px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+        }
+
+        .form-group select:focus,
+        .form-group input[type="text"]:focus {
+            border-color: #4c8c4a;
+            box-shadow: 0 0 0 3px rgba(76, 140, 74, 0.1);
+        }
+
+        /* =====================================================
+           COLOR OPTIONS
+        ===================================================== */
+
+        .color-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .color-option {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 1px #ccc;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.08);
+        }
+
+        .color-option.selected {
+            box-shadow:
+                0 0 0 2px #222,
+                0 4px 10px rgba(0, 0, 0, 0.15);
+            transform: scale(1.08);
+        }
+
+        /* =====================================================
+           UPLOAD AREA
+        ===================================================== */
+
+        .upload-box {
+            border: 2px dashed #cbd2c7;
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            background: #fafcf9;
+        }
+
+        .upload-box i {
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .upload-box p {
+            margin: 5px 0 12px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .upload-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: #222;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .upload-label:hover {
+            opacity: 0.9;
+        }
+
+        #photoInput {
+            display: none;
+        }
+
+        /* =====================================================
+           PHOTO CONTROLS
+        ===================================================== */
+
+        #photoControls {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f5f7f3;
+        }
+
+        .photo-control-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .photo-control-row button {
+            border: 1px solid #d5d9d2;
+            background: #fff;
+            border-radius: 7px;
+            padding: 9px 13px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .photo-control-row button:hover {
+            background: #f0f2ee;
+        }
+
+        .photo-size-wrapper {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        #photoSize {
+            width: 100%;
+        }
+
+        /* =====================================================
+           BUTTON
+        ===================================================== */
+
+        #addToCartBtn {
+            width: 100%;
+            min-height: 52px;
+            border: none;
+            border-radius: 10px;
+            background: #222;
+            color: #fff;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        #addToCartBtn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            opacity: 0.92;
+        }
+
+        #addToCartBtn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        /* =====================================================
+           HELPER TEXT
+        ===================================================== */
+
+        .helper-text {
+            margin-top: 7px;
+            font-size: 12px;
+            color: #777;
+        }
+
+        .customizer-note {
+            margin-top: 20px;
+            padding: 13px 15px;
+            border-radius: 9px;
+            background: #f4f8f2;
+            font-size: 12px;
+            color: #586157;
+            line-height: 1.6;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .customizer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-card {
+                position: static;
+            }
+
+            .preview-wrapper {
+                padding-top: 10px;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .customizer-page {
+                padding: 25px 12px 50px;
+            }
+
+            .customizer-heading h1 {
+                font-size: 27px;
+            }
+
+            .customizer-heading p {
+                font-size: 13px;
+            }
+
+            .customizer-card {
+                padding: 20px 16px;
+                border-radius: 14px;
+            }
+
+            .customizer-card h2 {
+                font-size: 19px;
+            }
+
+            #bagShape {
+                width: 280px;
+                height: 320px;
+            }
+
+            #uploadedImage {
+                left: 65px;
+                top: 60px;
+            }
+
+            #customText {
+                left: 55px;
+                top: 205px;
+                max-width: 170px;
+            }
+        }
+
+        @media (max-width: 380px) {
+
+            #bagShape {
+                width: 250px;
+                height: 290px;
+            }
+
+            #uploadedImage {
+                left: 60px;
+                top: 55px;
+            }
+
+            #customText {
+                left: 45px;
+                top: 190px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =====================================================
+         CUSTOMIZER PAGE
+    ===================================================== -->
+
+    <main class="customizer-page">
+
+        <div class="customizer-container">
+
+            <!-- PAGE HEADING -->
+
+            <div class="customizer-heading">
+
+                <h1>
+                    Customize Your Bag
+                </h1>
+
+                <p>
+                    Design your own eco-friendly bag with your image,
+                    text and favorite color.
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 CUSTOMIZER GRID
+            ================================================= -->
+
+            <div class="customizer-grid">
+
+
+                <!-- =================================================
+                     BAG PREVIEW
+                ================================================= -->
+
+                <section class="customizer-card preview-card">
+
+                    <h2>
+                        <i class="fa-solid fa-eye"></i>
+                        Live Preview
+                    </h2>
+
+                    <div class="preview-wrapper">
+
+                        <div id="bagShape">
+
+                            <div id="bagHandle"></div>
+
+                            <img id="uploadedImage" src="" alt="Uploaded customization" draggable="false">
+
+                            <div id="customText"></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="price-box">
+
+                        <span class="price-label">
+                            Current Price
+                        </span>
+
+                        <div id="price">
+                            Loading...
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     CUSTOMIZATION CONTROLS
+                ================================================= -->
+
+                <section class="customizer-card">
+
+                    <h2>
+                        <i class="fa-solid fa-sliders"></i>
+                        Customize
+                    </h2>
+
+
+                    <!-- BAG TYPE -->
+
+                    <div class="form-group">
+
+                        <label for="bagType">
+                            Bag Type
+                        </label>
+
+                        <select id="bagType">
+                            <option value="">
+                                Loading products...
+                            </option>
+                        </select>
+
+                    </div>
+
+
+                    <!-- BAG COLOR -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Bag Color
+                        </label>
+
+                        <div class="color-options">
+
+                            <button type="button" class="color-option selected" data-color="#f7f7f7"
+                                style="background:#f7f7f7;" aria-label="White"></button>
+
+                            <button type="button" class="color-option" data-color="#ffffff" style="background:#ffffff;"
+                                aria-label="Pure White"></button>
+
+                            <button type="button" class="color-option" data-color="#d8b27c" style="background:#d8b27c;"
+                                aria-label="Natural"></button>
+
+                            <button type="button" class="color-option" data-color="#d8c39b" style="background:#d8c39b;"
+                                aria-label="Beige"></button>
+
+                            <button type="button" class="color-option" data-color="#222222" style="background:#222222;"
+                                aria-label="Black"></button>
+
+                            <button type="button" class="color-option" data-color="#78966b" style="background:#78966b;"
+                                aria-label="Green"></button>
+
+                            <button type="button" class="color-option" data-color="#9bbbd4" style="background:#9bbbd4;"
+                                aria-label="Blue"></button>
+
+                            <button type="button" class="color-option" data-color="#d99a9a" style="background:#d99a9a;"
+                                aria-label="Pink"></button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- UPLOAD PHOTO -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Add Your Photo
+                        </label>
+
+                        <div class="upload-box">
+
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                            <p>
+                                Upload an image to place it on your bag.
+                                Maximum size: 5 MB.
+                            </p>
+
+                            <label for="photoInput" class="upload-label">
+                                <i class="fa-solid fa-image"></i>
+                                Choose Image
+                            </label>
+
+                            <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp,image/gif">
+
+                        </div>
+
+
+                        <!-- PHOTO CONTROLS -->
+
+                        <div id="photoControls">
+
+                            <div class="photo-size-wrapper">
+
+                                <label for="photoSize">
+                                    Image Size
+                                </label>
+
+                                <input type="range" id="photoSize" min="50" max="220" value="120">
+
+                            </div>
+
+
+                            <div class="photo-control-row">
+
+                                <button type="button" id="rotateLeft">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                    Rotate Left
+                                </button>
+
+                                <button type="button" id="rotateRight">
+                                    <i class="fa-solid fa-rotate-right"></i>
+                                    Rotate Right
+                                </button>
+
+                                <button type="button" id="deletePhoto">
+                                    <i class="fa-solid fa-trash"></i>
+                                    Remove
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CUSTOM TEXT -->
+
+                    <div class="form-group">
+
+                        <label for="textInput">
+                            Add Custom Text
+                        </label>
+
+                        <input type="text" id="textInput" placeholder="Enter text for your bag" maxlength="60">
+
+                        <div class="helper-text">
+                            Your text can be moved around the bag preview.
+                        </div>
+
+                    </div>
+
+
+                    <!-- TEXT SIZE -->
+
+                    <div class="form-group">
+
+                        <label for="textSize">
+                            Text Size
+                        </label>
+
+                        <input type="range" id="textSize" min="12" max="50" value="24">
+
+                    </div>
+
+
+                    <!-- TEXT COLOR -->
+
+                    <div class="form-group">
+
+                        <label for="textColor">
+                            Text Color
+                        </label>
+
+                        <input type="color" id="textColor" value="#000000" style="
+                                width: 60px;
+                                height: 42px;
+                                padding: 3px;
+                                border: 1px solid #d9ddd5;
+                                border-radius: 8px;
+                                cursor: pointer;
+                            ">
+
+                    </div>
+
+
+                    <!-- INFORMATION -->
+
+                    <div class="customizer-note">
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                        Your uploaded image is securely stored using
+                        Cloudinary. Only the image URL is saved with
+                        your customized cart item.
+
+                    </div>
+
+
+                    <!-- ADD TO CART -->
+
+                    <div style="margin-top:24px;">
+
+                        <button type="button" id="addToCartBtn" disabled>
+                            <i class="fa-solid fa-cart-plus"></i>
+                            Add Customized Bag to Cart
+                        </button>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         CUSTOMIZER JAVASCRIPT
+         IMPORTANT:
+         This file is located at:
+         client/js/customize-bag.js
+    ===================================================== -->
+
+    <script src="js/customize-bag.js"></script>
+
+</body>
+
+</html>

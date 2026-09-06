@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Order Confirmed | EcoBag Shop</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+
+    <header>
+
+        <div class="logo">
+            🌿 EcoBag Shop
+        </div>
+
+    </header>
+
+
+    <main class="order-success">
+
+        <div class="success-box">
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+
+            <h1>
+                Order Placed Successfully!
+            </h1>
+
+
+            <p>
+                Thank you for shopping with EcoBag Shop.
+            </p>
+
+
+            <div id="orderDetails"></div>
+
+
+            <a href="shop.html" class="shop-now-btn">
+                Continue Shopping
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        const order =
+            JSON.parse(
+                localStorage.getItem("lastOrder")
+            );
+
+
+        if (order) {
+
+            document.getElementById(
+                "orderDetails"
+            ).innerHTML = `
+
+                <p>
+                    <strong>Order ID:</strong>
+                    ${order._id}
+                </p>
+
+                <p>
+                    <strong>Total:</strong>
+                    ₹${order.totalAmount}
+                </p>
+
+                <p>
+                    <strong>Payment:</strong>
+                    Cash on Delivery
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    ${order.orderStatus}
+                </p>
+
+            `;
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>

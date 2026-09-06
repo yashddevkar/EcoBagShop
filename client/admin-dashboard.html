@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | EcoBag Shop</title>
+
+    <link rel="stylesheet" href="css/admin.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+
+    <!-- =====================================================
+         RESPONSIVE PRODUCT MANAGEMENT
+         ===================================================== -->
+
+    <style>
+        /* =================================================
+           PRODUCT PRICE & DISCOUNT
+           ================================================= */
+
+        .price-management {
+
+            margin-top: 15px;
+
+            padding: 14px;
+
+            background: #f7faf8;
+
+            border: 1px solid #e1e9e4;
+
+            border-radius: 12px;
+
+        }
+
+
+        .price-management label {
+
+            display: block;
+
+            margin-bottom: 6px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            color: #355344;
+
+        }
+
+
+        .price-management input {
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 10px 11px;
+
+            margin-bottom: 11px;
+
+            border: 1px solid #ccd8d1;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            background: #ffffff;
+
+            outline: none;
+
+        }
+
+
+        .price-management input:focus {
+
+            border-color: #25824e;
+
+            box-shadow:
+                0 0 0 2px rgba(37, 130, 78, 0.08);
+
+        }
+
+
+        .calculated-selling-price {
+
+            margin: 3px 0 12px;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            color: #25824e;
+
+        }
+
+
+        .save-price-btn {
+
+            width: 100%;
+
+            border: none;
+
+            background: #25824e;
+
+            color: #ffffff;
+
+            padding: 11px 12px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition:
+                opacity 0.2s ease,
+                transform 0.1s ease;
+
+        }
+
+
+        .save-price-btn:hover {
+
+            opacity: 0.9;
+
+        }
+
+
+        .save-price-btn:active {
+
+            transform: scale(0.98);
+
+        }
+
+
+        .save-price-btn i {
+
+            margin-right: 6px;
+
+        }
+
+
+        /* =================================================
+           PRODUCT PRICE DISPLAY
+           ================================================= */
+
+        .product-price {
+
+            font-size: 17px;
+
+            font-weight: 700;
+
+            color: #25824e;
+
+            margin-top: 8px;
+
+        }
+
+
+        /* =================================================
+           RESPONSIVE TABLE
+           ================================================= */
+
+        .admin-table-container {
+
+            overflow-x: auto;
+
+            -webkit-overflow-scrolling: touch;
+
+        }
+
+
+        .admin-table-container table {
+
+            min-width: 720px;
+
+        }
+
+
+        /* =================================================
+           MOBILE ADMIN DASHBOARD
+           ================================================= */
+
+        @media (max-width: 768px) {
+
+
+            .admin-main {
+
+                width: 100%;
+
+                box-sizing: border-box;
+
+            }
+
+
+            .admin-topbar {
+
+                flex-wrap: wrap;
+
+                gap: 12px;
+
+            }
+
+
+            .stats-grid {
+
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+            }
+
+
+            .mini-stats {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .admin-products-grid {
+
+                grid-template-columns: 1fr !important;
+
+            }
+
+
+            .admin-product-card {
+
+                width: 100%;
+
+                box-sizing: border-box;
+
+            }
+
+
+            .admin-product-card img {
+
+                width: 100%;
+
+                max-width: 100%;
+
+                height: auto;
+
+                max-height: 280px;
+
+                object-fit: contain;
+
+            }
+
+
+            .price-management {
+
+                padding: 12px;
+
+            }
+
+
+            .price-management input {
+
+                min-height: 44px;
+
+                font-size: 16px;
+
+            }
+
+
+            .save-price-btn {
+
+                min-height: 44px;
+
+                font-size: 15px;
+
+            }
+
+
+            .stock-control {
+
+                display: flex;
+
+                gap: 8px;
+
+                width: 100%;
+
+            }
+
+
+            .stock-control input {
+
+                min-width: 0;
+
+                flex: 1;
+
+                min-height: 44px;
+
+                font-size: 16px;
+
+            }
+
+
+            .stock-control button {
+
+                min-width: 80px;
+
+                min-height: 44px;
+
+            }
+
+
+            .section-title {
+
+                flex-wrap: wrap;
+
+                gap: 10px;
+
+            }
+
+        }
+
+
+        /* =================================================
+           SMALL MOBILE
+           ================================================= */
+
+        @media (max-width: 480px) {
+
+
+            .stats-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .admin-section {
+
+                padding-left: 12px;
+
+                padding-right: 12px;
+
+            }
+
+
+            .price-management {
+
+                padding: 10px;
+
+            }
+
+
+            .calculated-selling-price {
+
+                font-size: 14px;
+
+            }
+
+
+            .save-price-btn {
+
+                font-size: 14px;
+
+            }
+
+
+            .stock-control {
+
+                flex-direction: column;
+
+            }
+
+
+            .stock-control button {
+
+                width: 100%;
+
+            }
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside class="admin-sidebar">
+
+
+        <div class="admin-logo">
+
+            <span class="admin-logo-icon">
+                🌿
+            </span>
+
+            <div>
+
+                <strong>
+                    EcoBag
+                </strong>
+
+                <small>
+                    ADMIN PANEL
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <nav class="admin-nav">
+
+
+            <a href="#dashboard" class="admin-nav-link active">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="#orders" class="admin-nav-link">
+
+                <i class="fa-solid fa-box"></i>
+
+                Orders
+
+            </a>
+
+
+            <a href="#products" class="admin-nav-link">
+
+                <i class="fa-solid fa-bag-shopping"></i>
+
+                Products
+
+            </a>
+
+
+            <a href="#customers" class="admin-nav-link">
+
+                <i class="fa-solid fa-users"></i>
+
+                Customers
+
+            </a>
+            <a href="#analytics" class="admin-nav-link">
+                <i class="fa-solid fa-chart-pie"></i>
+                Analytics
+            </a>
+
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+
+            <a href="shop.html">
+
+                <i class="fa-solid fa-store"></i>
+
+                View Store
+
+            </a>
+
+
+            <button type="button" onclick="adminLogout()">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                Logout
+
+            </button>
+
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="admin-main">
+
+
+        <!-- =================================================
+             TOP BAR
+             ================================================= -->
+
+        <header class="admin-topbar">
+
+
+            <div>
+
+                <span class="admin-eyebrow">
+                    ECOBAG MANAGEMENT
+                </span>
+
+
+                <h1>
+                    Admin Dashboard
+                </h1>
+
+            </div>
+
+
+            <div class="admin-profile">
+
+
+                <div class="admin-avatar">
+
+                    <i class="fa-solid fa-user-shield"></i>
+
+                </div>
+
+
+                <div>
+
+                    <strong id="adminName">
+                        Admin
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+        </header>
+
+
+
+        <!-- =================================================
+             DASHBOARD
+             ================================================= -->
+
+        <section id="dashboard" class="admin-section">
+
+
+            <div class="welcome-card">
+
+
+                <div>
+
+                    <span>
+                        WELCOME BACK 👋
+                    </span>
+
+
+                    <h2>
+                        Manage your EcoBag Shop
+                    </h2>
+
+
+                    <p>
+                        Monitor orders, products,
+                        customers and your store
+                        performance from one place.
+                    </p>
+
+
+                </div>
+
+
+                <div class="welcome-icon">
+
+                    <i class="fa-solid fa-leaf"></i>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 MAIN STATISTICS
+                 ================================================= -->
+
+            <div class="stats-grid">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon orders-icon">
+
+                        <i class="fa-solid fa-box"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            TOTAL ORDERS
+                        </span>
+
+
+                        <strong id="totalOrders">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon revenue-icon">
+
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            REVENUE
+                        </span>
+
+
+                        <strong id="revenue">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon customer-icon">
+
+                        <i class="fa-solid fa-users"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            CUSTOMERS
+                        </span>
+
+
+                        <strong id="totalCustomers">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon product-icon">
+
+                        <i class="fa-solid fa-bag-shopping"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            PRODUCTS
+                        </span>
+
+
+                        <strong id="totalProducts">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SECONDARY STATISTICS
+                 ================================================= -->
+
+            <div class="mini-stats">
+
+
+                <div>
+
+                    <i class="fa-solid fa-clock"></i>
+
+                    <span>
+                        Pending Orders
+                    </span>
+
+                    <strong id="pendingOrders">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    <span>
+                        Delivered
+                    </span>
+
+                    <strong id="deliveredOrders">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    <span>
+                        Low Stock
+                    </span>
+
+                    <strong id="lowStockProducts">
+                        0
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =====================================================
+             ORDERS
+             ===================================================== -->
+
+        <section id="orders" class="admin-section">
+
+
+            <div class="section-title">
+
+
+                <div>
+
+                    <span>
+                        ORDER MANAGEMENT
+                    </span>
+
+                    <h2>
+                        Recent Orders
+                    </h2>
+
+                </div>
+
+
+                <button type="button" class="refresh-btn" onclick="loadOrders()">
+
+                    <i class="fa-solid fa-rotate"></i>
+
+                    Refresh
+
+                </button>
+
+
+            </div>
+
+
+            <div class="admin-table-container">
+
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Order
+                            </th>
+
+                            <th>
+                                Customer
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Amount
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="ordersTable">
+
+                        <tr>
+
+                            <td colspan="6" class="loading-cell">
+
+                                Loading orders...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =====================================================
+             PRODUCTS
+             ===================================================== -->
+
+        <section id="products" class="admin-section">
+
+
+            <div class="section-title">
+
+
+                <div>
+
+                    <span>
+                        PRODUCT MANAGEMENT
+                    </span>
+
+                    <h2>
+                        Store Products
+                    </h2>
+
+                </div>
+
+
+            </div>
+
+
+            <!--
+                Products are generated dynamically
+                by admin-dashboard.js
+            -->
+
+            <div id="productsGrid" class="admin-products-grid">
+
+                <div class="loading-box">
+
+                    Loading products...
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =====================================================
+             CUSTOMERS
+             ===================================================== -->
+
+        <section id="customers" class="admin-section">
+
+
+            <div class="section-title">
+
+
+                <div>
+
+                    <span>
+                        CUSTOMER MANAGEMENT
+                    </span>
+
+                    <h2>
+                        Registered Customers
+                    </h2>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="admin-table-container">
+
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Customer
+                            </th>
+
+                            <th>
+                                Email
+                            </th>
+
+                            <th>
+                                Phone
+                            </th>
+
+                            <th>
+                                Joined
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="customersTable">
+
+                        <tr>
+
+                            <td colspan="4" class="loading-cell">
+
+                                Loading customers...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </section>
+
+        <!-- =====================================================
+     SALES ANALYTICS
+     ===================================================== -->
+
+        <section id="analytics" class="admin-section">
+
+            <div class="section-title">
+                <div>
+                    <span>BUSINESS INSIGHTS</span>
+                    <h2>Sales Analytics</h2>
+                </div>
+
+                <button type="button" class="refresh-btn" onclick="loadSalesAnalytics()">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Refresh Analytics
+                </button>
+            </div>
+
+
+            <!-- ANALYTICS SUMMARY -->
+
+            <div class="stats-grid analytics-stats">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon revenue-icon">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                    </div>
+
+                    <div>
+                        <span>TOTAL REVENUE</span>
+
+                        <strong id="analyticsTotalRevenue">
+                            ₹0
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon orders-icon">
+                        <i class="fa-solid fa-calendar-day"></i>
+                    </div>
+
+                    <div>
+                        <span>TODAY'S SALES</span>
+
+                        <strong id="analyticsTodaySales">
+                            ₹0
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon customer-icon">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </div>
+
+                    <div>
+                        <span>VALID ORDERS</span>
+
+                        <strong id="analyticsTotalOrders">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon product-icon">
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </div>
+
+                    <div>
+                        <span>AVERAGE ORDER</span>
+
+                        <strong id="analyticsAverageOrder">
+                            ₹0
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SALES CHART -->
+
+            <div class="analytics-card">
+
+                <div class="analytics-card-header">
+
+                    <div>
+                        <span>LAST 7 DAYS</span>
+
+                        <h3>Daily Sales</h3>
+                    </div>
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                </div>
+
+                <div id="salesChart" class="sales-chart">
+                    <p class="analytics-loading">
+                        Loading sales data...
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- TOP PRODUCTS -->
+
+            <div class="analytics-card">
+
+                <div class="analytics-card-header">
+
+                    <div>
+                        <span>PRODUCT PERFORMANCE</span>
+
+                        <h3>Top Selling Products</h3>
+                    </div>
+
+                    <i class="fa-solid fa-trophy"></i>
+
+                </div>
+
+                <div id="topSellingProducts" class="top-selling-products">
+                    <p class="analytics-loading">
+                        Loading product sales...
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =====================================================
+             FOOTER
+             ===================================================== -->
+
+        <footer class="admin-footer">
+
+            <span>
+                🌿 EcoBag Shop Admin
+            </span>
+
+
+            <span>
+                © 2026 EcoBag Shop
+            </span>
+
+        </footer>
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script src="js/admin-dashboard.js"></script>
+
+
+</body>
+
+</html>
