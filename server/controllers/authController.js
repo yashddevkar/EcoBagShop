@@ -4,19 +4,10 @@ dns.setDefaultResultOrder("ipv4first");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const crypto = require("crypto");
 
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    requireTLS: true,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 
 // =====================================================
@@ -237,100 +228,23 @@ exports.login = async (req, res) => {
         // SEND OTP EMAIL
         // =================================================
 
-        await transporter.sendMail({
-
-            from:
-                `"EcoBag Shop" <${process.env.EMAIL_USER}>`,
-
-            to:
-                user.email,
-
-            subject:
-                "EcoBag Shop - Login OTP",
-
+        const { data, error } = await resend.emails.send({
+            from: "EcoBag Shop <onboarding@resend.dev>",
+            to: [user.email],
+            subject: "EcoBag Shop - Login OTP",
             html: `
-
-                <div style="
-                    font-family: Arial, sans-serif;
-                    max-width: 600px;
-                    margin: auto;
-                    padding: 30px;
-                    border: 1px solid #e0e0e0;
-                    border-radius: 12px;
-                ">
-
-                    <h2 style="
-                        color: #1d7442;
-                        text-align: center;
-                    ">
-                        🌿 EcoBag Shop
-                    </h2>
-
-
-                    <p>
-                        Hello
-                        <strong>
-                            ${user.name}
-                        </strong>,
-                    </p>
-
-
-                    <p>
-                        Your OTP for logging into
-                        EcoBag Shop is:
-                    </p>
-
-
-                    <div style="
-                        text-align: center;
-                        margin: 30px 0;
-                    ">
-
-                        <span style="
-                            display: inline-block;
-                            background: #edf6ee;
-                            color: #1d7442;
-                            font-size: 32px;
-                            font-weight: bold;
-                            letter-spacing: 8px;
-                            padding: 15px 25px;
-                            border-radius: 10px;
-                        ">
-                            ${otp}
-                        </span>
-
-                    </div>
-
-
-                    <p>
-                        This OTP is valid for
-                        <strong>5 minutes</strong>.
-                    </p>
-
-
-                    <p>
-                        If you did not attempt to log in,
-                        you can safely ignore this email.
-                    </p>
-
-
-                    <hr>
-
-
-                    <p style="
-                        color: #777;
-                        font-size: 12px;
-                        text-align: center;
-                    ">
-                        © 2026 EcoBag Shop
-                    </p>
-
-                </div>
-
-            `
-
+        <h2>EcoBag Shop</h2>
+        <p>Your login OTP is:</p>
+        <h1>${otp}</h1>
+        <p>This OTP will expire in ${otpExpiryMinutes} minutes.</p>
+        <p>If you did not request this OTP, please ignore this email.</p>
+    `
         });
 
+        if (error) {
+            console.error("Resend email error:", error);
+            throw new Error(error.message || "Unable to send OTP email");
+        }
 
         // IMPORTANT:
         // Do NOT send JWT here.
@@ -648,69 +562,23 @@ exports.resendOTP = async (req, res) => {
         await user.save();
 
 
-        await transporter.sendMail({
-
-            from:
-                `"EcoBag Shop" <${process.env.EMAIL_USER}>`,
-
-            to:
-                user.email,
-
-            subject:
-                "EcoBag Shop - New Login OTP",
-
+        const { data, error } = await resend.emails.send({
+            from: "EcoBag Shop <onboarding@resend.dev>",
+            to: [user.email],
+            subject: "EcoBag Shop - New Login OTP",
             html: `
-
-                <div style="
-                    font-family: Arial, sans-serif;
-                    max-width: 600px;
-                    margin: auto;
-                    padding: 30px;
-                    border: 1px solid #e0e0e0;
-                    border-radius: 12px;
-                ">
-
-                    <h2 style="
-                        color: #1d7442;
-                        text-align: center;
-                    ">
-                        🌿 EcoBag Shop
-                    </h2>
-
-                    <p>
-                        Your new login OTP is:
-                    </p>
-
-                    <div style="
-                        text-align: center;
-                        margin: 30px 0;
-                    ">
-
-                        <span style="
-                            display: inline-block;
-                            background: #edf6ee;
-                            color: #1d7442;
-                            font-size: 32px;
-                            font-weight: bold;
-                            letter-spacing: 8px;
-                            padding: 15px 25px;
-                            border-radius: 10px;
-                        ">
-                            ${otp}
-                        </span>
-
-                    </div>
-
-                    <p>
-                       This OTP is valid for
-<strong>${otpExpiryMinutes} minutes</strong>.
-                    </p>
-
-                </div>
-
-            `
-
+        <h2>EcoBag Shop</h2>
+        <p>Your new login OTP is:</p>
+        <h1>${otp}</h1>
+        <p>This OTP will expire in ${otpExpiryMinutes} minutes..</p>
+        <p>If you did not request this OTP, please ignore this email.</p>
+    `
         });
+
+        if (error) {
+            console.error("Resend email error:", error);
+            throw new Error(error.message || "Unable to send OTP email");
+        }
 
 
         res.status(200).json({
