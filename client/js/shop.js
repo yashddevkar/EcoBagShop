@@ -206,20 +206,14 @@ function displayProducts(products) {
     const container =
         document.getElementById("products");
 
-
     if (!container) {
-
         console.error(
             'Element with id="products" was not found.'
         );
-
         return;
-
     }
 
-
     container.innerHTML = "";
-
 
     if (
         !Array.isArray(products) ||
@@ -227,289 +221,380 @@ function displayProducts(products) {
     ) {
 
         container.innerHTML = `
-
             <div class="no-products">
-
-                <h3>
-                    No products found
-                </h3>
-
-                <p>
-                    Try another search or category.
-                </p>
-
+                <h3>No products found</h3>
+                <p>Try another search or category.</p>
             </div>
-
         `;
 
         return;
-
     }
 
+    products.forEach(product => {
 
-    products.forEach(
-        product => {
+        const productId =
+            String(product._id || "");
 
-            const productId =
-                String(
-                    product._id || ""
-                );
+        if (!productId) {
+            console.warn(
+                "Skipping product because MongoDB _id is missing:",
+                product
+            );
+            return;
+        }
 
 
-            if (!productId) {
+        // =================================================
+        // BASIC PRODUCT DATA
+        // =================================================
 
-                console.warn(
-                    "Skipping product because MongoDB _id is missing:",
-                    product
-                );
+        const price =
+            Number(product.price) || 0;
 
-                return;
+        const discount =
+            Math.max(
+                0,
+                Number(product.discount) || 0
+            );
 
+        const discountedPrice =
+            Math.round(
+                price -
+                (
+                    price *
+                    discount /
+                    100
+                )
+            );
+
+        const stock =
+            Math.max(
+                0,
+                Number(product.stock) || 0
+            );
+
+        const rating =
+            product.rating !== undefined &&
+                product.rating !== null
+                ? product.rating
+                : 0;
+
+        const ecoScore =
+            product.ecoScore !== undefined &&
+                product.ecoScore !== null
+                ? product.ecoScore
+                : 0;
+
+        const image =
+            product.image ||
+            "https://via.placeholder.com/300";
+
+
+        // =================================================
+        // PRODUCT SPECIFICATIONS
+        // =================================================
+
+        const size =
+            product.size ||
+            "Not specified";
+
+        const material =
+            product.material ||
+            "Not specified";
+
+        const dimensions =
+            product.dimensions ||
+            {};
+
+        const length =
+            Number(dimensions.length) || 0;
+
+        const width =
+            Number(dimensions.width) || 0;
+
+        const height =
+            Number(dimensions.height) || 0;
+
+        const dimensionUnit =
+            dimensions.unit ||
+            "inch";
+
+        const dimensionsText =
+            (
+                length > 0 ||
+                width > 0 ||
+                height > 0
+            )
+                ? `${length} × ${width} × ${height} ${dimensionUnit}`
+                : "Not specified";
+
+
+        const weightCapacity =
+            product.weightCapacity ||
+            {};
+
+        const capacityValue =
+            Number(weightCapacity.value) || 0;
+
+        const capacityUnit =
+            weightCapacity.unit ||
+            "kg";
+
+        const capacityText =
+            capacityValue > 0
+                ? `Up to ${capacityValue} ${capacityUnit}`
+                : "Not specified";
+
+
+        const productWeight =
+            product.productWeight ||
+            {};
+
+        const productWeightValue =
+            Number(productWeight.value) || 0;
+
+        const productWeightUnit =
+            productWeight.unit ||
+            "g";
+
+        const productWeightText =
+            productWeightValue > 0
+                ? `${productWeightValue} ${productWeightUnit}`
+                : "Not specified";
+
+
+        // =================================================
+        // PRODUCT CARD
+        // =================================================
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "product-card";
+
+
+        card.innerHTML = `
+
+            <div
+                class="product-image"
+                data-product-id="${escapeHTML(productId)}"
+                style="cursor:pointer;"
+            >
+
+                <img
+                    src="${escapeHTML(image)}"
+                    alt="${escapeHTML(
+            product.name ||
+            "EcoBag Product"
+        )}"
+                    loading="lazy"
+                >
+
+                ${discount > 0
+                ? `
+                            <span class="discount-badge">
+                                ${discount}% OFF
+                            </span>
+                        `
+                : ""
             }
 
-
-            const price =
-                Number(product.price) || 0;
+            </div>
 
 
-            const discount =
-                Math.max(
-                    0,
-                    Number(product.discount) || 0
-                );
+            <div class="product-info">
 
-
-            const discountedPrice =
-                Math.round(
-                    price -
-                    (
-                        price *
-                        discount /
-                        100
-                    )
-                );
-
-
-            const stock =
-                Math.max(
-                    0,
-                    Number(product.stock) || 0
-                );
-
-
-            const rating =
-                product.rating !== undefined &&
-                    product.rating !== null
-                    ? product.rating
-                    : "4.5";
-
-
-            const ecoScore =
-                product.ecoScore !== undefined &&
-                    product.ecoScore !== null
-                    ? product.ecoScore
-                    : 0;
-
-
-            const image =
-                product.image ||
-                "https://via.placeholder.com/300";
-
-
-            const card =
-                document.createElement("div");
-
-
-            card.className =
-                "product-card";
-
-
-            // =================================================
-            // PRODUCT CARD
-            // =================================================
-
-            card.innerHTML = `
-
-                <div
-                    class="product-image"
+                <h3
+                    class="product-name-link"
                     data-product-id="${escapeHTML(productId)}"
                     style="cursor:pointer;"
                 >
+                    ${escapeHTML(
+                product.name ||
+                "EcoBag Product"
+            )}
+                </h3>
 
-                    <img
-                        src="${escapeHTML(image)}"
-                        alt="${escapeHTML(
-                product.name || "EcoBag Product"
-            )}"
-                        loading="lazy"
-                    >
+
+                <p class="product-description">
+                    ${escapeHTML(
+                product.description ||
+                ""
+            )}
+                </p>
+
+
+                <div class="rating">
+                    ⭐ ${escapeHTML(
+                String(rating)
+            )} / 5
+                </div>
+
+
+                <div class="eco-score">
+                    🌱 Eco Score:
+                    ${escapeHTML(
+                String(ecoScore)
+            )}/100
+                </div>
+
+
+                <!-- PRODUCT SPECIFICATIONS -->
+
+                <div
+                    class="product-specifications"
+                    style="
+                        margin:12px 0;
+                        padding:10px;
+                        background:#f7f7f7;
+                        border-radius:8px;
+                        font-size:13px;
+                        line-height:1.7;
+                    "
+                >
+
+                    <div>
+                        <strong>Size:</strong>
+                        ${escapeHTML(
+                String(size)
+            )}
+                    </div>
+
+                    <div>
+                        <strong>Dimensions:</strong>
+                        ${escapeHTML(
+                dimensionsText
+            )}
+                    </div>
+
+                    <div>
+                        <strong>Weight Capacity:</strong>
+                        ${escapeHTML(
+                capacityText
+            )}
+                    </div>
+
+                    <div>
+                        <strong>Product Weight:</strong>
+                        ${escapeHTML(
+                productWeightText
+            )}
+                    </div>
+
+                    <div>
+                        <strong>Material:</strong>
+                        ${escapeHTML(
+                String(material)
+            )}
+                    </div>
+
+                </div>
+
+
+                <!-- PRICE -->
+
+                <div class="product-price">
 
                     ${discount > 0
-                    ? `
-                                <span class="discount-badge">
-                                    ${discount}% OFF
+                ? `
+                                <span class="old-price">
+                                    ₹${price}
                                 </span>
                             `
-                    : ""
-                }
+                : ""
+            }
+
+                    <strong>
+                        ₹${discountedPrice}
+                    </strong>
 
                 </div>
 
 
-                <div class="product-info">
+                <!-- STOCK -->
 
-                    <h3
-                        class="product-name-link"
+                <p class="stock">
+
+                    ${stock > 0
+                ? `In Stock: ${stock}`
+                : "Out of Stock"
+            }
+
+                </p>
+
+
+                <!-- BUTTONS -->
+
+                <div class="product-buttons">
+
+                    <button
+                        class="view-details-btn"
+                        type="button"
                         data-product-id="${escapeHTML(productId)}"
-                        style="cursor:pointer;"
                     >
-                        ${escapeHTML(
-                    product.name ||
-                    "EcoBag Product"
-                )}
-                    </h3>
+                        <i class="fa-solid fa-eye"></i>
+                        View Details
+                    </button>
 
 
-                    <p class="product-description">
+                    <button
+                        class="add-cart-btn"
+                        type="button"
+                        data-cart-product-id="${escapeHTML(productId)}"
+                        ${stock <= 0
+                ? "disabled"
+                : ""
+            }
+                    >
 
-                        ${escapeHTML(
-                    product.description ||
-                    ""
-                )}
+                        <i class="fa-solid fa-cart-shopping"></i>
 
-                    </p>
+                        ${stock <= 0
+                ? "Out of Stock"
+                : "Add to Cart"
+            }
 
-
-                    <div class="rating">
-
-                        ⭐ ${escapeHTML(
-                    String(rating)
-                )}
-
-                    </div>
-
-
-                    <div class="eco-score">
-
-                        🌱 Eco Score:
-                        ${escapeHTML(
-                    String(ecoScore)
-                )}/100
-
-                    </div>
-
-
-                    <div class="product-price">
-
-                        ${discount > 0
-                    ? `
-                                    <span class="old-price">
-                                        ₹${price}
-                                    </span>
-                                `
-                    : ""
-                }
-
-                        <strong>
-                            ₹${discountedPrice}
-                        </strong>
-
-                    </div>
-
-
-                    <p class="stock">
-
-                        ${stock > 0
-                    ? `In Stock: ${stock}`
-                    : "Out of Stock"
-                }
-
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <button
-                            class="view-details-btn"
-                            type="button"
-                            data-product-id="${escapeHTML(productId)}"
-                        >
-
-                            <i class="fa-solid fa-eye"></i>
-
-                            View Details
-
-                        </button>
-
-
-                        <button
-                            class="add-cart-btn"
-                            type="button"
-                            data-cart-product-id="${escapeHTML(productId)}"
-                            ${stock <= 0
-                    ? "disabled"
-                    : ""
-                }
-                        >
-
-                            <i class="fa-solid fa-cart-shopping"></i>
-
-                            ${stock <= 0
-                    ? "Out of Stock"
-                    : "Add to Cart"
-                }
-
-                        </button>
-
-                    </div>
+                    </button>
 
                 </div>
 
-            `;
+            </div>
+        `;
 
 
-            container.appendChild(
-                card
-            );
+        container.appendChild(card);
 
-        }
-    );
+    });
 
 
     // =================================================
-    // ADD EVENT LISTENERS
+    // PRODUCT DETAILS BUTTONS / CARDS
     // =================================================
 
     container
-        .querySelectorAll(
-            "[data-product-id]"
-        )
-        .forEach(
-            element => {
+        .querySelectorAll("[data-product-id]")
+        .forEach(element => {
 
-                element.addEventListener(
-                    "click",
-                    function () {
+            element.addEventListener(
+                "click",
+                function () {
 
-                        const productId =
-                            this.dataset.productId;
+                    const productId =
+                        this.dataset.productId;
 
+                    if (productId) {
 
-                        if (
+                        openProductDetails(
                             productId
-                        ) {
-
-                            openProductDetails(
-                                productId
-                            );
-
-                        }
+                        );
 
                     }
-                );
 
-            }
-        );
+                }
+            );
+
+        });
 
 
     // =================================================
@@ -520,52 +605,23 @@ function displayProducts(products) {
         .querySelectorAll(
             "[data-cart-product-id]"
         )
-        .forEach(
-            button => {
+        .forEach(button => {
 
-                button.addEventListener(
-                    "click",
-                    function (event) {
+            button.addEventListener(
+                "click",
+                function (event) {
 
-                        event.stopPropagation();
+                    event.stopPropagation();
 
+                    const productId =
+                        this.dataset.cartProductId;
 
-                        const productId =
-                            this.dataset.cartProductId;
+                    addToCart(productId);
 
+                }
+            );
 
-                        addToCart(
-                            productId
-                        );
-
-                    }
-                );
-
-            }
-        );
-
-}
-
-
-// =====================================================
-// OPEN PRODUCT DETAILS
-// =====================================================
-
-function openProductDetails(productId) {
-
-    if (!productId) {
-
-        console.error(
-            "Product ID is missing."
-        );
-
-        return;
-
-    }
-
-
-    window.location.href =
-        `product-details.html?id=${encodeURIComponent(productId)}`;
+        });
 
 }
 
@@ -710,8 +766,40 @@ if (filterInput) {
 //
 // No product ID is hardcoded here.
 // =====================================================
-
 function addToCart(productId) {
+
+    // =================================================
+    // LOGIN CHECK
+    // =================================================
+
+    const token = localStorage.getItem("token");
+    const savedUser = localStorage.getItem("user");
+
+    let user = null;
+
+    try {
+        user = savedUser
+            ? JSON.parse(savedUser)
+            : null;
+    } catch (error) {
+        console.error("User data parsing error:", error);
+        user = null;
+    }
+
+    // Customer must be logged in
+    if (!token || !user || !user.email) {
+
+        alert("Please login first to add products to cart.");
+
+        window.location.href = "login.html";
+
+        return;
+    }
+
+
+    // =================================================
+    // PRODUCT ID CHECK
+    // =================================================
 
     if (!productId) {
 
@@ -720,7 +808,6 @@ function addToCart(productId) {
         );
 
         return;
-
     }
 
 
@@ -1103,7 +1190,20 @@ function escapeHTML(value) {
 
 }
 
+// =====================================================
+// OPEN PRODUCT DETAILS
+// =====================================================
 
+function openProductDetails(productId) {
+
+    if (!productId) {
+        console.error("Product ID is missing.");
+        return;
+    }
+
+    window.location.href =
+        `product-details.html?id=${encodeURIComponent(productId)}`;
+}
 // =====================================================
 // START SHOP
 // =====================================================

@@ -2770,18 +2770,26 @@ async function deleteOrder(
 // LOAD PRODUCTS
 // ============================================================
 
+// ============================================================
+// PRODUCT MANAGEMENT
+// ADD / EDIT / DELETE / PRICE / STOCK
+// ============================================================
+
+let adminProductsCache = [];
+
+
+// ============================================================
+// LOAD PRODUCTS
+// ============================================================
+
 async function loadProducts() {
 
     const container =
-        document.getElementById(
-            "productsGrid"
-        );
-
+        document.getElementById("productsGrid");
 
     if (!container) {
         return;
     }
-
 
     container.innerHTML = `
         <div class="loading-box">
@@ -2789,48 +2797,100 @@ async function loadProducts() {
         </div>
     `;
 
-
     try {
 
-        const response =
-            await fetch(
-                `${API}/products`
-            );
-
+        const response = await fetch(
+            `${API}/products`
+        );
 
         const data =
-            await getJSONResponse(
-                response
-            );
-
+            await getJSONResponse(response);
 
         if (!data.success) {
-
             throw new Error(
                 data.message ||
                 "Unable to load products."
             );
         }
 
-
         const products =
-            Array.isArray(
-                data.products
-            )
+            Array.isArray(data.products)
                 ? data.products
                 : [];
 
+        adminProductsCache = products;
 
         container.innerHTML = "";
+
+        // ----------------------------------------------------
+        // ADD PRODUCT BUTTON
+        // ----------------------------------------------------
+
+        const toolbar =
+            document.createElement("div");
+
+        toolbar.style.cssText = `
+            width:100%;
+            display:flex;
+            justify-content:flex-end;
+            margin-bottom:20px;
+            grid-column:1/-1;
+        `;
+
+        toolbar.innerHTML = `
+            <button
+                type="button"
+                onclick="openAddProductModal()"
+                style="
+                    background:#198754;
+                    color:white;
+                    border:none;
+                    border-radius:8px;
+                    padding:12px 20px;
+                    font-weight:600;
+                    cursor:pointer;
+                    font-size:14px;
+                "
+            >
+                <i class="fa-solid fa-plus"></i>
+                Add New Product
+            </button>
+        `;
+
+        container.appendChild(toolbar);
 
 
         if (products.length === 0) {
 
-            container.innerHTML = `
-                <div class="loading-box">
-                    No products found.
-                </div>
+            const empty =
+                document.createElement("div");
+
+            empty.className =
+                "loading-box";
+
+            empty.style.gridColumn =
+                "1/-1";
+
+            empty.innerHTML = `
+                No products found.
+                <br><br>
+                <button
+                    type="button"
+                    onclick="openAddProductModal()"
+                    style="
+                        background:#198754;
+                        color:white;
+                        border:none;
+                        border-radius:8px;
+                        padding:10px 16px;
+                        cursor:pointer;
+                    "
+                >
+                    Add First Product
+                </button>
             `;
+
+            container.appendChild(empty);
 
             return;
         }
@@ -2840,26 +2900,17 @@ async function loadProducts() {
             function (product) {
 
                 const card =
-                    document.createElement(
-                        "div"
-                    );
-
+                    document.createElement("div");
 
                 card.className =
                     "admin-product-card";
 
 
                 const productPrice =
-                    safeNumber(
-                        product.price
-                    );
-
+                    safeNumber(product.price);
 
                 const discount =
-                    safeNumber(
-                        product.discount
-                    );
-
+                    safeNumber(product.discount);
 
                 const finalPrice =
                     Math.round(
@@ -2871,7 +2922,6 @@ async function loadProducts() {
                         )
                     );
 
-
                 const savings =
                     Math.max(
                         0,
@@ -2881,12 +2931,8 @@ async function loadProducts() {
                         )
                     );
 
-
                 const stock =
-                    safeNumber(
-                        product.stock
-                    );
-
+                    safeNumber(product.stock);
 
                 const stockClass =
                     stock <= 10
@@ -2911,42 +2957,82 @@ async function loadProducts() {
 
                     <div class="admin-product-info">
 
-                        <!-- NAME -->
+                        <!-- PRODUCT NAME -->
 
                         <h3>
-
                             ${escapeHTML(
                     product.name ||
                     "Product"
                 )}
-
                         </h3>
 
 
                         <!-- CATEGORY -->
 
                         <p>
-
                             ${escapeHTML(
                     product.category ||
                     "Uncategorized"
                 )}
-
                         </p>
 
 
-                        <!-- CURRENT PRICE -->
+                        <!-- PRODUCT DETAILS -->
+
+                        <div
+                            style="
+                                background:#f7f7f7;
+                                padding:10px;
+                                border-radius:8px;
+                                margin:10px 0;
+                                font-size:12px;
+                                line-height:1.7;
+                            "
+                        >
+
+                            <div>
+                                <strong>Size:</strong>
+                                ${escapeHTML(
+                    product.size ||
+                    "Not specified"
+                )}
+                            </div>
+
+                            <div>
+                                <strong>Material:</strong>
+                                ${escapeHTML(
+                    product.material ||
+                    "Not specified"
+                )}
+                            </div>
+
+                            <div>
+                                <strong>Eco Score:</strong>
+                                ${safeNumber(
+                    product.ecoScore
+                )}/100
+                            </div>
+
+                            <div>
+                                <strong>Rating:</strong>
+                                ${safeNumber(
+                    product.rating
+                )}/5
+                            </div>
+
+                        </div>
+
+
+                        <!-- SELLING PRICE -->
 
                         <div class="product-price">
 
                             Selling Price:
 
                             <strong>
-
                                 ${formatCurrency(
                     finalPrice
                 )}
-
                             </strong>
 
                             ${discount > 0
@@ -2990,14 +3076,9 @@ async function loadProducts() {
 
                         <div class="price-management">
 
-                            <label
-                                for="price-${escapeHTML(
-                        product._id
-                    )}"
-                            >
+                            <label>
                                 Original Price (₹)
                             </label>
-
 
                             <input
                                 type="number"
@@ -3007,21 +3088,15 @@ async function loadProducts() {
                         product._id
                     )}"
                                 value="${productPrice}"
-                                placeholder="Enter price"
                                 oninput="updateSellingPrice('${escapeJS(
                         product._id
                     )}')"
                             >
 
 
-                            <label
-                                for="discount-${escapeHTML(
-                        product._id
-                    )}"
-                            >
+                            <label>
                                 Discount (%)
                             </label>
-
 
                             <input
                                 type="number"
@@ -3032,7 +3107,6 @@ async function loadProducts() {
                         product._id
                     )}"
                                 value="${discount}"
-                                placeholder="0 - 100"
                                 oninput="updateSellingPrice('${escapeJS(
                         product._id
                     )}')"
@@ -3045,13 +3119,10 @@ async function loadProducts() {
                         product._id
                     )}"
                             >
-
                                 Selling Price:
-
                                 ${formatCurrency(
                         finalPrice
                     )}
-
                             </div>
 
 
@@ -3062,11 +3133,8 @@ async function loadProducts() {
                         product._id
                     )}')"
                             >
-
                                 <i class="fa-solid fa-floppy-disk"></i>
-
                                 Save Price & Discount
-
                             </button>
 
                         </div>
@@ -3077,13 +3145,11 @@ async function loadProducts() {
                         <span
                             class="stock-label ${stockClass}"
                         >
-
                             Current Stock:
 
                             <strong>
                                 ${stock}
                             </strong>
-
                         </span>
 
 
@@ -3094,7 +3160,6 @@ async function loadProducts() {
                             <label>
                                 Add Stock
                             </label>
-
 
                             <div class="stock-control">
 
@@ -3109,32 +3174,82 @@ async function loadProducts() {
                                     placeholder="Quantity"
                                 >
 
-
                                 <button
                                     type="button"
                                     onclick="addStock('${escapeJS(
                         product._id
                     )}')"
                                 >
-
                                     <i class="fa-solid fa-plus"></i>
-
                                     Add
-
                                 </button>
 
                             </div>
 
                         </div>
 
-                    </div>
 
+                        <!-- PRODUCT ACTIONS -->
+
+                        <div
+                            style="
+                                display:flex;
+                                gap:8px;
+                                margin-top:15px;
+                                flex-wrap:wrap;
+                            "
+                        >
+
+                            <button
+                                type="button"
+                                onclick="openEditProductModal('${escapeJS(
+                        product._id
+                    )}')"
+                                style="
+                                    flex:1;
+                                    min-width:100px;
+                                    background:#0d6efd;
+                                    color:white;
+                                    border:none;
+                                    border-radius:7px;
+                                    padding:10px;
+                                    cursor:pointer;
+                                    font-weight:600;
+                                "
+                            >
+                                <i class="fa-solid fa-pen"></i>
+                                Edit
+                            </button>
+
+
+                            <button
+                                type="button"
+                                onclick="deleteProduct('${escapeJS(
+                        product._id
+                    )}')"
+                                style="
+                                    flex:1;
+                                    min-width:100px;
+                                    background:#dc3545;
+                                    color:white;
+                                    border:none;
+                                    border-radius:7px;
+                                    padding:10px;
+                                    cursor:pointer;
+                                    font-weight:600;
+                                "
+                            >
+                                <i class="fa-solid fa-trash"></i>
+                                Delete
+                            </button>
+
+                        </div>
+
+                    </div>
                 `;
 
 
-                container.appendChild(
-                    card
-                );
+                container.appendChild(card);
 
             }
         );
@@ -3147,7 +3262,6 @@ async function loadProducts() {
             error
         );
 
-
         container.innerHTML = `
             <div class="loading-box">
                 Unable to load products.
@@ -3156,6 +3270,1797 @@ async function loadProducts() {
     }
 }
 
+
+// ============================================================
+// PRODUCT MODAL
+// ============================================================
+
+function createProductModal() {
+
+    let modal =
+        document.getElementById(
+            "adminProductModal"
+        );
+
+    if (modal) {
+        return modal;
+    }
+
+
+    modal =
+        document.createElement("div");
+
+    modal.id =
+        "adminProductModal";
+
+
+    modal.style.cssText = `
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,0.65);
+        z-index:99999;
+        display:none;
+        align-items:center;
+        justify-content:center;
+        padding:20px;
+        overflow-y:auto;
+    `;
+
+
+    modal.innerHTML = `
+
+        <div
+            style="
+                width:min(900px,100%);
+                max-height:95vh;
+                overflow-y:auto;
+                background:white;
+                border-radius:14px;
+                padding:25px;
+                position:relative;
+                box-shadow:0 20px 60px rgba(0,0,0,0.3);
+            "
+        >
+
+            <button
+                type="button"
+                onclick="closeProductModal()"
+                style="
+                    position:absolute;
+                    top:15px;
+                    right:15px;
+                    border:none;
+                    background:#f1f1f1;
+                    width:35px;
+                    height:35px;
+                    border-radius:50%;
+                    cursor:pointer;
+                    font-size:18px;
+                "
+            >
+                ×
+            </button>
+
+
+            <h2
+                id="productModalTitle"
+                style="margin-top:0;"
+            >
+                Add New Product
+            </h2>
+
+
+            <form
+                id="adminProductForm"
+                onsubmit="saveAdminProduct(event)"
+            >
+
+                <input
+                    type="hidden"
+                    id="adminProductId"
+                >
+
+
+                <!-- BASIC INFORMATION -->
+
+                <h3>Basic Information</h3>
+
+                <div
+                    style="
+                        display:grid;
+                        grid-template-columns:repeat(
+                            auto-fit,
+                            minmax(220px,1fr)
+                        );
+                        gap:15px;
+                    "
+                >
+
+                    <div>
+                        <label>Product Name *</label>
+                        <input
+                            id="adminProductName"
+                            type="text"
+                            required
+                            placeholder="Example: Kraft Paper Bag"
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Category *</label>
+                        <input
+                            id="adminProductCategory"
+                            type="text"
+                            required
+                            placeholder="Example: Paper Bags"
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Material</label>
+                        <input
+                            id="adminProductMaterial"
+                            type="text"
+                            placeholder="Example: Kraft Paper"
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Size</label>
+                        <input
+                            id="adminProductSize"
+                            type="text"
+                            placeholder="Example: Medium"
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+                </div>
+
+
+                <div style="margin-top:15px;">
+
+                    <label>Description *</label>
+
+                    <textarea
+                        id="adminProductDescription"
+                        required
+                        rows="4"
+                        placeholder="Enter product description"
+                        style="
+                            width:100%;
+                            padding:10px;
+                            resize:vertical;
+                        "
+                    ></textarea>
+
+                </div>
+
+
+                <!-- PRICE / STOCK -->
+
+                <h3 style="margin-top:25px;">
+                    Price & Stock
+                </h3>
+
+
+                <div
+                    style="
+                        display:grid;
+                        grid-template-columns:repeat(
+                            auto-fit,
+                            minmax(160px,1fr)
+                        );
+                        gap:15px;
+                    "
+                >
+
+                    <div>
+                        <label>Price (₹) *</label>
+                        <input
+                            id="adminProductPrice"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            required
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Discount (%)</label>
+                        <input
+                            id="adminProductDiscount"
+                            type="number"
+                            min="0"
+                            max="100"
+                            value="0"
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Stock *</label>
+                        <input
+                            id="adminProductStock"
+                            type="number"
+                            min="0"
+                            step="1"
+                            required
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Rating (0-5)</label>
+                        <input
+                            id="adminProductRating"
+                            type="number"
+                            min="0"
+                            max="5"
+                            step="0.1"
+                            value="0"
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Eco Score (0-100)</label>
+                        <input
+                            id="adminProductEcoScore"
+                            type="number"
+                            min="0"
+                            max="100"
+                            value="50"
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+                </div>
+
+
+                <!-- DIMENSIONS -->
+
+                <h3 style="margin-top:25px;">
+                    Dimensions
+                </h3>
+
+
+                <div
+                    style="
+                        display:grid;
+                        grid-template-columns:repeat(
+                            auto-fit,
+                            minmax(140px,1fr)
+                        );
+                        gap:15px;
+                    "
+                >
+
+                    <div>
+                        <label>Length</label>
+                        <input
+                            id="adminProductLength"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value="0"
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Width</label>
+                        <input
+                            id="adminProductWidth"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value="0"
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Height</label>
+                        <input
+                            id="adminProductHeight"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value="0"
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Unit</label>
+                        <select
+                            id="adminProductDimensionUnit"
+                            style="width:100%;padding:10px;"
+                        >
+                            <option value="inch">inch</option>
+                            <option value="cm">cm</option>
+                            <option value="mm">mm</option>
+                        </select>
+                    </div>
+
+                </div>
+
+
+                <!-- WEIGHT -->
+
+                <h3 style="margin-top:25px;">
+                    Weight Information
+                </h3>
+
+
+                <div
+                    style="
+                        display:grid;
+                        grid-template-columns:repeat(
+                            auto-fit,
+                            minmax(180px,1fr)
+                        );
+                        gap:15px;
+                    "
+                >
+
+                    <div>
+                        <label>Weight Capacity</label>
+                        <input
+                            id="adminProductCapacity"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value="0"
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Capacity Unit</label>
+                        <select
+                            id="adminProductCapacityUnit"
+                            style="width:100%;padding:10px;"
+                        >
+                            <option value="kg">kg</option>
+                            <option value="g">g</option>
+                            <option value="lb">lb</option>
+                        </select>
+                    </div>
+
+
+                    <div>
+                        <label>Product Weight</label>
+                        <input
+                            id="adminProductWeight"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value="0"
+                            style="width:100%;padding:10px;"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label>Weight Unit</label>
+                        <select
+                            id="adminProductWeightUnit"
+                            style="width:100%;padding:10px;"
+                        >
+                            <option value="g">g</option>
+                            <option value="kg">kg</option>
+                            <option value="oz">oz</option>
+                        </select>
+                    </div>
+
+                </div>
+
+
+                <!-- IMAGE -->
+
+                <h3 style="margin-top:25px;">
+                    Product Image
+                </h3>
+
+
+                <input
+                    id="adminProductImageFile"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    style="width:100%;"
+                >
+
+
+                <div
+                    id="adminProductImageStatus"
+                    style="
+                        margin-top:8px;
+                        font-size:13px;
+                    "
+                ></div>
+
+
+                <input
+                    id="adminProductImage"
+                    type="hidden"
+                >
+
+
+                <img
+                    id="adminProductImagePreview"
+                    src=""
+                    alt="Product preview"
+                    style="
+                        display:none;
+                        width:160px;
+                        height:160px;
+                        object-fit:cover;
+                        border-radius:10px;
+                        margin-top:12px;
+                    "
+                >
+
+
+                <!-- BUTTONS -->
+
+                <div
+                    style="
+                        display:flex;
+                        gap:10px;
+                        justify-content:flex-end;
+                        margin-top:25px;
+                    "
+                >
+
+                    <button
+                        type="button"
+                        onclick="closeProductModal()"
+                        style="
+                            padding:11px 20px;
+                            border:1px solid #ccc;
+                            background:white;
+                            border-radius:8px;
+                            cursor:pointer;
+                        "
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        id="adminProductSaveButton"
+                        type="submit"
+                        style="
+                            padding:11px 20px;
+                            border:none;
+                            background:#198754;
+                            color:white;
+                            border-radius:8px;
+                            cursor:pointer;
+                            font-weight:600;
+                        "
+                    >
+                        Save Product
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    `;
+
+
+    document.body.appendChild(modal);
+
+
+    // IMAGE PREVIEW
+
+    const imageFile =
+        document.getElementById(
+            "adminProductImageFile"
+        );
+
+    imageFile.addEventListener(
+        "change",
+        function () {
+
+            const file =
+                this.files &&
+                this.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            const preview =
+                document.getElementById(
+                    "adminProductImagePreview"
+                );
+
+            preview.src =
+                URL.createObjectURL(file);
+
+            preview.style.display =
+                "block";
+        }
+    );
+
+
+    return modal;
+}
+
+
+// ============================================================
+// OPEN ADD PRODUCT
+// ============================================================
+
+function openAddProductModal() {
+
+    const modal =
+        createProductModal();
+
+    document.getElementById(
+        "productModalTitle"
+    ).textContent =
+        "Add New Product";
+
+    document.getElementById(
+        "adminProductForm"
+    ).reset();
+
+    document.getElementById(
+        "adminProductId"
+    ).value = "";
+
+    document.getElementById(
+        "adminProductDiscount"
+    ).value = 0;
+
+    document.getElementById(
+        "adminProductRating"
+    ).value = 0;
+
+    document.getElementById(
+        "adminProductEcoScore"
+    ).value = 50;
+
+    document.getElementById(
+        "adminProductLength"
+    ).value = 0;
+
+    document.getElementById(
+        "adminProductWidth"
+    ).value = 0;
+
+    document.getElementById(
+        "adminProductHeight"
+    ).value = 0;
+
+    document.getElementById(
+        "adminProductCapacity"
+    ).value = 0;
+
+    document.getElementById(
+        "adminProductWeight"
+    ).value = 0;
+
+    document.getElementById(
+        "adminProductImage"
+    ).value = "";
+
+    document.getElementById(
+        "adminProductImagePreview"
+    ).style.display = "none";
+
+    document.getElementById(
+        "adminProductImageStatus"
+    ).textContent = "";
+
+    modal.style.display =
+        "flex";
+}
+
+
+// ============================================================
+// OPEN EDIT PRODUCT
+// ============================================================
+
+function openEditProductModal(productId) {
+
+    const product =
+        adminProductsCache.find(
+            function (item) {
+
+                return String(item._id) ===
+                    String(productId);
+            }
+        );
+
+    if (!product) {
+
+        alert(
+            "Product information not found."
+        );
+
+        return;
+    }
+
+
+    const modal =
+        createProductModal();
+
+
+    document.getElementById(
+        "productModalTitle"
+    ).textContent =
+        "Edit Product";
+
+
+    document.getElementById(
+        "adminProductId"
+    ).value =
+        product._id || "";
+
+
+    document.getElementById(
+        "adminProductName"
+    ).value =
+        product.name || "";
+
+
+    document.getElementById(
+        "adminProductCategory"
+    ).value =
+        product.category || "";
+
+
+    document.getElementById(
+        "adminProductMaterial"
+    ).value =
+        product.material || "";
+
+
+    document.getElementById(
+        "adminProductSize"
+    ).value =
+        product.size || "";
+
+
+    document.getElementById(
+        "adminProductDescription"
+    ).value =
+        product.description || "";
+
+
+    document.getElementById(
+        "adminProductPrice"
+    ).value =
+        safeNumber(product.price);
+
+
+    document.getElementById(
+        "adminProductDiscount"
+    ).value =
+        safeNumber(product.discount);
+
+
+    document.getElementById(
+        "adminProductStock"
+    ).value =
+        safeNumber(product.stock);
+
+
+    document.getElementById(
+        "adminProductRating"
+    ).value =
+        safeNumber(product.rating);
+
+
+    document.getElementById(
+        "adminProductEcoScore"
+    ).value =
+        safeNumber(product.ecoScore);
+
+
+    const dimensions =
+        product.dimensions || {};
+
+
+    document.getElementById(
+        "adminProductLength"
+    ).value =
+        safeNumber(dimensions.length);
+
+
+    document.getElementById(
+        "adminProductWidth"
+    ).value =
+        safeNumber(dimensions.width);
+
+
+    document.getElementById(
+        "adminProductHeight"
+    ).value =
+        safeNumber(dimensions.height);
+
+
+    document.getElementById(
+        "adminProductDimensionUnit"
+    ).value =
+        dimensions.unit ||
+        "inch";
+
+
+    const capacity =
+        product.weightCapacity || {};
+
+
+    document.getElementById(
+        "adminProductCapacity"
+    ).value =
+        safeNumber(capacity.value);
+
+
+    document.getElementById(
+        "adminProductCapacityUnit"
+    ).value =
+        capacity.unit ||
+        "kg";
+
+
+    const productWeight =
+        product.productWeight || {};
+
+
+    document.getElementById(
+        "adminProductWeight"
+    ).value =
+        safeNumber(productWeight.value);
+
+
+    document.getElementById(
+        "adminProductWeightUnit"
+    ).value =
+        productWeight.unit ||
+        "g";
+
+
+    document.getElementById(
+        "adminProductImage"
+    ).value =
+        product.image || "";
+
+
+    const preview =
+        document.getElementById(
+            "adminProductImagePreview"
+        );
+
+
+    if (product.image) {
+
+        preview.src =
+            product.image;
+
+        preview.style.display =
+            "block";
+
+    } else {
+
+        preview.style.display =
+            "none";
+    }
+
+
+    document.getElementById(
+        "adminProductImageFile"
+    ).value = "";
+
+
+    document.getElementById(
+        "adminProductImageStatus"
+    ).textContent =
+        product.image
+            ? "Current image will be kept unless you select a new image."
+            : "";
+
+
+    modal.style.display =
+        "flex";
+}
+
+
+// ============================================================
+// CLOSE PRODUCT MODAL
+// ============================================================
+
+function closeProductModal() {
+
+    const modal =
+        document.getElementById(
+            "adminProductModal"
+        );
+
+    if (modal) {
+        modal.style.display =
+            "none";
+    }
+}
+
+
+// ============================================================
+// UPLOAD PRODUCT IMAGE
+// ============================================================
+
+async function uploadAdminProductImage() {
+
+    const fileInput =
+        document.getElementById(
+            "adminProductImageFile"
+        );
+
+    const file =
+        fileInput &&
+        fileInput.files &&
+        fileInput.files[0];
+
+    if (!file) {
+
+        return document.getElementById(
+            "adminProductImage"
+        ).value;
+    }
+
+
+    const status =
+        document.getElementById(
+            "adminProductImageStatus"
+        );
+
+
+    status.textContent =
+        "Uploading image...";
+
+    status.style.color =
+        "#555";
+
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "image",
+        file
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/upload/image`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization:
+                            authHeaders()
+                                .Authorization
+                    },
+                    body: formData
+                }
+            );
+
+
+        const data =
+            await getJSONResponse(
+                response
+            );
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Image upload failed."
+            );
+        }
+
+
+        const imageUrl =
+            data.imageUrl || "";
+
+
+        if (!imageUrl) {
+
+            throw new Error(
+                "Image URL was not returned by server."
+            );
+        }
+
+
+        document.getElementById(
+            "adminProductImage"
+        ).value =
+            imageUrl;
+
+
+        status.textContent =
+            "Image uploaded successfully.";
+
+        status.style.color =
+            "#198754";
+
+
+        return imageUrl;
+
+
+    } catch (error) {
+
+        status.textContent =
+            error.message ||
+            "Image upload failed.";
+
+        status.style.color =
+            "#dc3545";
+
+        throw error;
+    }
+}
+
+
+// ============================================================
+// SAVE PRODUCT
+// ============================================================
+
+async function saveAdminProduct(event) {
+
+    event.preventDefault();
+
+
+    const saveButton =
+        document.getElementById(
+            "adminProductSaveButton"
+        );
+
+
+    const productId =
+        document.getElementById(
+            "adminProductId"
+        ).value.trim();
+
+
+    const name =
+        document.getElementById(
+            "adminProductName"
+        ).value.trim();
+
+
+    const description =
+        document.getElementById(
+            "adminProductDescription"
+        ).value.trim();
+
+
+    const category =
+        document.getElementById(
+            "adminProductCategory"
+        ).value.trim();
+
+
+    const material =
+        document.getElementById(
+            "adminProductMaterial"
+        ).value.trim();
+
+
+    const size =
+        document.getElementById(
+            "adminProductSize"
+        ).value.trim();
+
+
+    const price =
+        Number(
+            document.getElementById(
+                "adminProductPrice"
+            ).value
+        );
+
+
+    const discount =
+        Number(
+            document.getElementById(
+                "adminProductDiscount"
+            ).value
+        );
+
+
+    const stock =
+        Number(
+            document.getElementById(
+                "adminProductStock"
+            ).value
+        );
+
+
+    const rating =
+        Number(
+            document.getElementById(
+                "adminProductRating"
+            ).value
+        );
+
+
+    const ecoScore =
+        Number(
+            document.getElementById(
+                "adminProductEcoScore"
+            ).value
+        );
+
+
+    // --------------------------------------------------------
+    // VALIDATION
+    // --------------------------------------------------------
+
+    if (!name) {
+
+        alert(
+            "Please enter product name."
+        );
+
+        return;
+    }
+
+
+    if (!description) {
+
+        alert(
+            "Please enter product description."
+        );
+
+        return;
+    }
+
+
+    if (!category) {
+
+        alert(
+            "Please enter product category."
+        );
+
+        return;
+    }
+
+
+    if (
+        !Number.isFinite(price) ||
+        price < 0
+    ) {
+
+        alert(
+            "Please enter a valid price."
+        );
+
+        return;
+    }
+
+
+    if (
+        !Number.isFinite(discount) ||
+        discount < 0 ||
+        discount > 100
+    ) {
+
+        alert(
+            "Discount must be between 0 and 100."
+        );
+
+        return;
+    }
+
+
+    if (
+        !Number.isInteger(stock) ||
+        stock < 0
+    ) {
+
+        alert(
+            "Stock must be a valid whole number."
+        );
+
+        return;
+    }
+
+
+    if (
+        !Number.isFinite(rating) ||
+        rating < 0 ||
+        rating > 5
+    ) {
+
+        alert(
+            "Rating must be between 0 and 5."
+        );
+
+        return;
+    }
+
+
+    if (
+        !Number.isFinite(ecoScore) ||
+        ecoScore < 0 ||
+        ecoScore > 100
+    ) {
+
+        alert(
+            "Eco Score must be between 0 and 100."
+        );
+
+        return;
+    }
+
+
+    try {
+
+        saveButton.disabled =
+            true;
+
+        saveButton.textContent =
+            "Saving...";
+
+
+        // ----------------------------------------------------
+        // IMAGE
+        // ----------------------------------------------------
+
+        const image =
+            await uploadAdminProductImage();
+
+
+        if (!image) {
+
+            alert(
+                "Please select a product image."
+            );
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // PRODUCT DATA
+        // ----------------------------------------------------
+
+        const productData = {
+
+            name:
+                name,
+
+            description:
+                description,
+
+            category:
+                category,
+
+            image:
+                image,
+
+            price:
+                price,
+
+            discount:
+                discount,
+
+            stock:
+                stock,
+
+            rating:
+                rating,
+
+            ecoScore:
+                ecoScore,
+
+            material:
+                material,
+
+            size:
+                size,
+
+            dimensions: {
+
+                length:
+                    Number(
+                        document.getElementById(
+                            "adminProductLength"
+                        ).value
+                    ) || 0,
+
+                width:
+                    Number(
+                        document.getElementById(
+                            "adminProductWidth"
+                        ).value
+                    ) || 0,
+
+                height:
+                    Number(
+                        document.getElementById(
+                            "adminProductHeight"
+                        ).value
+                    ) || 0,
+
+                unit:
+                    document.getElementById(
+                        "adminProductDimensionUnit"
+                    ).value
+
+            },
+
+            weightCapacity: {
+
+                value:
+                    Number(
+                        document.getElementById(
+                            "adminProductCapacity"
+                        ).value
+                    ) || 0,
+
+                unit:
+                    document.getElementById(
+                        "adminProductCapacityUnit"
+                    ).value
+
+            },
+
+            productWeight: {
+
+                value:
+                    Number(
+                        document.getElementById(
+                            "adminProductWeight"
+                        ).value
+                    ) || 0,
+
+                unit:
+                    document.getElementById(
+                        "adminProductWeightUnit"
+                    ).value
+
+            }
+
+        };
+
+
+        // ----------------------------------------------------
+        // CREATE OR UPDATE
+        // ----------------------------------------------------
+
+        const url =
+            productId
+                ? `${API}/products/${encodeURIComponent(
+                    productId
+                )}`
+                : `${API}/products`;
+
+
+        const method =
+            productId
+                ? "PUT"
+                : "POST";
+
+
+        const response =
+            await fetch(
+                url,
+                {
+                    method:
+                        method,
+
+                    headers:
+                        authHeaders(),
+
+                    body:
+                        JSON.stringify(
+                            productData
+                        )
+                }
+            );
+
+
+        const data =
+            await getJSONResponse(
+                response
+            );
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.message ||
+                "Unable to save product."
+            );
+        }
+
+
+        alert(
+            productId
+                ? "Product updated successfully!"
+                : "Product added successfully!"
+        );
+
+
+        closeProductModal();
+
+
+        await Promise.all([
+            loadProducts(),
+            loadDashboard()
+        ]);
+
+
+    } catch (error) {
+
+        console.error(
+            "Save Product Error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Server error while saving product."
+        );
+
+
+    } finally {
+
+        saveButton.disabled =
+            false;
+
+        saveButton.textContent =
+            "Save Product";
+    }
+}
+
+
+// ============================================================
+// DELETE PRODUCT
+// ============================================================
+
+async function deleteProduct(productId) {
+
+    const product =
+        adminProductsCache.find(
+            function (item) {
+
+                return String(item._id) ===
+                    String(productId);
+            }
+        );
+
+
+    const productName =
+        product &&
+            product.name
+            ? product.name
+            : "this product";
+
+
+    const confirmed =
+        confirm(
+            `Are you sure you want to permanently delete "${productName}"?`
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/products/${encodeURIComponent(
+                    productId
+                )}`,
+                {
+                    method:
+                        "DELETE",
+
+                    headers:
+                        authHeaders()
+                }
+            );
+
+
+        const data =
+            await getJSONResponse(
+                response
+            );
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.message ||
+                "Unable to delete product."
+            );
+        }
+
+
+        alert(
+            "Product deleted successfully!"
+        );
+
+
+        await Promise.all([
+            loadProducts(),
+            loadDashboard()
+        ]);
+
+
+    } catch (error) {
+
+        console.error(
+            "Delete Product Error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Server error while deleting product."
+        );
+    }
+}
+
+
+// ============================================================
+// UPDATE PRODUCT PRICE & DISCOUNT
+// ============================================================
+
+async function updateProductPrice(
+    productId
+) {
+
+    const priceInput =
+        document.getElementById(
+            `price-${productId}`
+        );
+
+
+    const discountInput =
+        document.getElementById(
+            `discount-${productId}`
+        );
+
+
+    if (
+        !priceInput ||
+        !discountInput
+    ) {
+
+        alert(
+            "Price controls not found."
+        );
+
+        return;
+    }
+
+
+    const price =
+        Number(
+            priceInput.value
+        );
+
+
+    const discount =
+        Number(
+            discountInput.value
+        );
+
+
+    if (
+        !Number.isFinite(price) ||
+        price < 0
+    ) {
+
+        alert(
+            "Please enter a valid price."
+        );
+
+        return;
+    }
+
+
+    if (
+        !Number.isFinite(discount) ||
+        discount < 0 ||
+        discount > 100
+    ) {
+
+        alert(
+            "Discount must be between 0% and 100%."
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/products/${encodeURIComponent(
+                    productId
+                )}`,
+                {
+                    method:
+                        "PUT",
+
+                    headers:
+                        authHeaders(),
+
+                    body:
+                        JSON.stringify({
+                            price:
+                                price,
+
+                            discount:
+                                discount
+                        })
+                }
+            );
+
+
+        const data =
+            await getJSONResponse(
+                response
+            );
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.message ||
+                "Unable to update product price."
+            );
+        }
+
+
+        alert(
+            "Product price and discount updated successfully!"
+        );
+
+
+        await Promise.all([
+            loadProducts(),
+            loadDashboard()
+        ]);
+
+
+    } catch (error) {
+
+        console.error(
+            "Update Product Price Error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Server error while updating product."
+        );
+    }
+}
+
+
+// ============================================================
+// LIVE SELLING PRICE
+// ============================================================
+
+function updateSellingPrice(
+    productId
+) {
+
+    const priceInput =
+        document.getElementById(
+            `price-${productId}`
+        );
+
+
+    const discountInput =
+        document.getElementById(
+            `discount-${productId}`
+        );
+
+
+    const sellingPriceElement =
+        document.getElementById(
+            `selling-${productId}`
+        );
+
+
+    if (
+        !priceInput ||
+        !discountInput ||
+        !sellingPriceElement
+    ) {
+
+        return;
+    }
+
+
+    const price =
+        Number(
+            priceInput.value
+        ) || 0;
+
+
+    let discount =
+        Number(
+            discountInput.value
+        ) || 0;
+
+
+    discount =
+        Math.min(
+            100,
+            Math.max(
+                0,
+                discount
+            )
+        );
+
+
+    const sellingPrice =
+        Math.round(
+            price -
+            (
+                price *
+                discount /
+                100
+            )
+        );
+
+
+    sellingPriceElement.textContent =
+        `Selling Price: ${formatCurrency(
+            sellingPrice
+        )}`;
+}
+
+
+// ============================================================
+// ADD STOCK
+// ============================================================
+
+async function addStock(
+    productId
+) {
+
+    const input =
+        document.getElementById(
+            `stock-${productId}`
+        );
+
+
+    if (!input) {
+        return;
+    }
+
+
+    const quantity =
+        Number(
+            input.value
+        );
+
+
+    if (
+        !Number.isInteger(
+            quantity
+        ) ||
+        quantity <= 0
+    ) {
+
+        alert(
+            "Please enter a valid whole-number stock quantity."
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/products/${encodeURIComponent(
+                    productId
+                )}/add-stock`,
+                {
+                    method:
+                        "PUT",
+
+                    headers:
+                        authHeaders(),
+
+                    body:
+                        JSON.stringify({
+                            quantity:
+                                quantity
+                        })
+                }
+            );
+
+
+        const data =
+            await getJSONResponse(
+                response
+            );
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.message ||
+                "Unable to add stock."
+            );
+        }
+
+
+        alert(
+            `${quantity} stock added successfully!`
+        );
+
+
+        input.value =
+            1;
+
+
+        await Promise.all([
+            loadProducts(),
+            loadDashboard()
+        ]);
+
+
+    } catch (error) {
+
+        console.error(
+            "Add Stock Error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Server error while adding stock."
+        );
+    }
+}
 
 // ============================================================
 // UPDATE PRODUCT PRICE & DISCOUNT

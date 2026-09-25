@@ -10,5 +10,8 @@
   "license": "ISC",
   "engines": {
     "node": ">=24.11.1 <25"
+  },
+  "dependencies": {
+    "resend": "^6.28.0"
   }
 }
