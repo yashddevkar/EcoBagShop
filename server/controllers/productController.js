@@ -1,42 +1,28 @@
 const Product = require("../models/Product");
 
-
 // =====================================================
 // GET ALL PRODUCTS
 // =====================================================
 
 exports.getProducts = async (req, res) => {
-
     try {
-
-        const products =
-            await Product.find()
-                .sort({ createdAt: -1 });
+        const products = await Product.find()
+            .sort({ createdAt: -1 });
 
         res.status(200).json({
-
             success: true,
-
             count: products.length,
-
-            products: products
-
+            products
         });
 
     } catch (error) {
-
         console.error("Get Products Error:", error);
 
         res.status(500).json({
-
             success: false,
-
             message: error.message
-
         });
-
     }
-
 };
 
 
@@ -45,46 +31,29 @@ exports.getProducts = async (req, res) => {
 // =====================================================
 
 exports.getProduct = async (req, res) => {
-
     try {
-
-        const product =
-            await Product.findById(req.params.id);
+        const product = await Product.findById(req.params.id);
 
         if (!product) {
-
             return res.status(404).json({
-
                 success: false,
-
                 message: "Product not found"
-
             });
-
         }
 
         res.status(200).json({
-
             success: true,
-
-            product: product
-
+            product
         });
 
     } catch (error) {
-
         console.error("Get Product Error:", error);
 
         res.status(500).json({
-
             success: false,
-
             message: error.message
-
         });
-
     }
-
 };
 
 
@@ -93,11 +62,9 @@ exports.getProduct = async (req, res) => {
 // =====================================================
 
 exports.createProduct = async (req, res) => {
-
     try {
 
         const {
-
             name,
             description,
             price,
@@ -108,97 +75,345 @@ exports.createProduct = async (req, res) => {
             rating,
             ecoScore,
             material,
-            size
-
+            size,
+            dimensions,
+            weightCapacity,
+            productWeight
         } = req.body;
 
 
-        // -------------------------------------------------
-        // PRICE VALIDATION
-        // -------------------------------------------------
+        // =================================================
+        // REQUIRED FIELDS
+        // =================================================
 
-        const productPrice =
-            Number(price);
+        if (!name || !name.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Product name is required."
+            });
+        }
+
+        if (!description || !description.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Product description is required."
+            });
+        }
+
+        if (!category || !category.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Product category is required."
+            });
+        }
+
+        if (!image || !image.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Product image is required."
+            });
+        }
+
+
+        // =================================================
+        // PRICE
+        // =================================================
+
+        const productPrice = Number(price);
 
         if (
             !Number.isFinite(productPrice) ||
             productPrice < 0
         ) {
-
             return res.status(400).json({
-
                 success: false,
-
                 message:
                     "Please enter a valid product price."
-
             });
-
         }
 
 
-        // -------------------------------------------------
-        // DISCOUNT VALIDATION
-        // -------------------------------------------------
+        // =================================================
+        // DISCOUNT
+        // =================================================
 
         const productDiscount =
             discount === undefined ||
-                discount === null ||
-                discount === ""
+            discount === null ||
+            discount === ""
                 ? 0
                 : Number(discount);
-
 
         if (
             !Number.isFinite(productDiscount) ||
             productDiscount < 0 ||
             productDiscount > 100
         ) {
-
             return res.status(400).json({
-
                 success: false,
-
                 message:
                     "Discount must be between 0 and 100."
-
             });
-
         }
 
 
-        const product =
-            new Product({
+        // =================================================
+        // STOCK
+        // =================================================
 
-                name,
+        const productStock =
+            stock === undefined ||
+            stock === null ||
+            stock === ""
+                ? 0
+                : Number(stock);
 
-                description,
-
-                price:
-                    productPrice,
-
-                discount:
-                    productDiscount,
-
-                category,
-
-                image,
-
-                stock,
-
-                rating,
-
-                ecoScore,
-
-                material,
-
-                size
-
+        if (
+            !Number.isFinite(productStock) ||
+            productStock < 0 ||
+            !Number.isInteger(productStock)
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Stock must be a valid whole number."
             });
+        }
+
+
+        // =================================================
+        // RATING
+        // =================================================
+
+        const productRating =
+            rating === undefined ||
+            rating === null ||
+            rating === ""
+                ? 0
+                : Number(rating);
+
+        if (
+            !Number.isFinite(productRating) ||
+            productRating < 0 ||
+            productRating > 5
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Rating must be between 0 and 5."
+            });
+        }
+
+
+        // =================================================
+        // ECO SCORE
+        // =================================================
+
+        const productEcoScore =
+            ecoScore === undefined ||
+            ecoScore === null ||
+            ecoScore === ""
+                ? 50
+                : Number(ecoScore);
+
+        if (
+            !Number.isFinite(productEcoScore) ||
+            productEcoScore < 0 ||
+            productEcoScore > 100
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Eco Score must be between 0 and 100."
+            });
+        }
+
+
+        // =================================================
+        // DIMENSIONS
+        // =================================================
+
+        const productDimensions = {
+            length:
+                Number(
+                    dimensions?.length || 0
+                ),
+
+            width:
+                Number(
+                    dimensions?.width || 0
+                ),
+
+            height:
+                Number(
+                    dimensions?.height || 0
+                ),
+
+            unit:
+                dimensions?.unit ||
+                "inch"
+        };
+
+
+        if (
+            !Number.isFinite(
+                productDimensions.length
+            ) ||
+            productDimensions.length < 0 ||
+
+            !Number.isFinite(
+                productDimensions.width
+            ) ||
+            productDimensions.width < 0 ||
+
+            !Number.isFinite(
+                productDimensions.height
+            ) ||
+            productDimensions.height < 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Dimensions must contain valid numbers."
+            });
+        }
+
+
+        // =================================================
+        // WEIGHT CAPACITY
+        // =================================================
+
+        const productWeightCapacity = {
+            value:
+                Number(
+                    weightCapacity?.value || 0
+                ),
+
+            unit:
+                weightCapacity?.unit ||
+                "kg"
+        };
+
+
+        if (
+            !Number.isFinite(
+                productWeightCapacity.value
+            ) ||
+            productWeightCapacity.value < 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Weight capacity must contain a valid number."
+            });
+        }
+
+
+        // =================================================
+        // PRODUCT WEIGHT
+        // =================================================
+
+        const productWeightData = {
+            value:
+                Number(
+                    productWeight?.value || 0
+                ),
+
+            unit:
+                productWeight?.unit ||
+                "g"
+        };
+
+
+        if (
+            !Number.isFinite(
+                productWeightData.value
+            ) ||
+            productWeightData.value < 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Product weight must contain a valid number."
+            });
+        }
+
+
+        // =================================================
+        // CREATE PRODUCT
+        // =================================================
+
+        const product = new Product({
+
+            name:
+                name.trim(),
+
+            description:
+                description.trim(),
+
+            price:
+                productPrice,
+
+            discount:
+                productDiscount,
+
+            category:
+                category.trim(),
+
+            image:
+                image.trim(),
+
+            stock:
+                productStock,
+
+            rating:
+                productRating,
+
+            ecoScore:
+                productEcoScore,
+
+            material:
+                material
+                    ? material.trim()
+                    : "",
+
+            size:
+                size
+                    ? size.trim()
+                    : "",
+
+            dimensions:
+                productDimensions,
+
+            weightCapacity:
+                productWeightCapacity,
+
+            productWeight:
+                productWeightData
+        });
 
 
         await product.save();
 
+
+        // =================================================
+        // SELLING PRICE
+        // =================================================
+
+        const sellingPrice =
+            Math.round(
+                product.price -
+                (
+                    product.price *
+                    product.discount /
+                    100
+                )
+            );
+
+
+        // =================================================
+        // RESPONSE
+        // =================================================
 
         res.status(201).json({
 
@@ -207,8 +422,9 @@ exports.createProduct = async (req, res) => {
             message:
                 "Product created successfully",
 
-            product:
-                product
+            product,
+
+            sellingPrice
 
         });
 
@@ -220,16 +436,10 @@ exports.createProduct = async (req, res) => {
         );
 
         res.status(500).json({
-
             success: false,
-
-            message:
-                error.message
-
+            message: error.message
         });
-
     }
-
 };
 
 
@@ -237,10 +447,21 @@ exports.createProduct = async (req, res) => {
 // UPDATE PRODUCT
 // ADMIN ONLY
 //
-// Used for:
+// Supports:
+// - Name
+// - Description
 // - Price
 // - Discount
-// - Other product information
+// - Category
+// - Image
+// - Stock
+// - Rating
+// - Eco Score
+// - Material
+// - Size
+// - Dimensions
+// - Weight Capacity
+// - Product Weight
 // =====================================================
 
 exports.updateProduct = async (req, res) => {
@@ -251,9 +472,9 @@ exports.updateProduct = async (req, res) => {
             req.params.id;
 
 
-        // -------------------------------------------------
+        // =================================================
         // FIND PRODUCT
-        // -------------------------------------------------
+        // =================================================
 
         const product =
             await Product.findById(
@@ -264,15 +485,53 @@ exports.updateProduct = async (req, res) => {
         if (!product) {
 
             return res.status(404).json({
-
                 success: false,
-
-                message:
-                    "Product not found"
-
+                message: "Product not found"
             });
 
         }
+
+
+        // =================================================
+        // BASIC PRODUCT FIELDS
+        // =================================================
+
+        const basicFields = [
+            "name",
+            "description",
+            "category",
+            "image",
+            "material",
+            "size"
+        ];
+
+
+        basicFields.forEach(
+            field => {
+
+                if (
+                    req.body[field] !== undefined
+                ) {
+
+                    if (
+                        typeof req.body[field] ===
+                        "string"
+                    ) {
+
+                        product[field] =
+                            req.body[field].trim();
+
+                    } else {
+
+                        product[field] =
+                            req.body[field];
+
+                    }
+
+                }
+
+            }
+        );
 
 
         // =================================================
@@ -295,12 +554,9 @@ exports.updateProduct = async (req, res) => {
             ) {
 
                 return res.status(400).json({
-
                     success: false,
-
                     message:
                         "Price must be a valid number greater than or equal to 0."
-
                 });
 
             }
@@ -333,12 +589,9 @@ exports.updateProduct = async (req, res) => {
             ) {
 
                 return res.status(400).json({
-
                     success: false,
-
                     message:
                         "Discount must be between 0 and 100."
-
                 });
 
             }
@@ -351,38 +604,265 @@ exports.updateProduct = async (req, res) => {
 
 
         // =================================================
-        // OTHER PRODUCT FIELDS
+        // STOCK
         // =================================================
 
-        const allowedFields = [
+        if (
+            req.body.stock !== undefined
+        ) {
 
-            "name",
-            "description",
-            "category",
-            "image",
-            "stock",
-            "rating",
-            "ecoScore",
-            "material",
-            "size"
-
-        ];
+            const newStock =
+                Number(
+                    req.body.stock
+                );
 
 
-        allowedFields.forEach(
-            field => {
+            if (
+                !Number.isInteger(newStock) ||
+                newStock < 0
+            ) {
 
-                if (
-                    req.body[field] !== undefined
-                ) {
-
-                    product[field] =
-                        req.body[field];
-
-                }
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Stock must be a valid whole number."
+                });
 
             }
-        );
+
+
+            product.stock =
+                newStock;
+
+        }
+
+
+        // =================================================
+        // RATING
+        // =================================================
+
+        if (
+            req.body.rating !== undefined
+        ) {
+
+            const newRating =
+                Number(
+                    req.body.rating
+                );
+
+
+            if (
+                !Number.isFinite(newRating) ||
+                newRating < 0 ||
+                newRating > 5
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Rating must be between 0 and 5."
+                });
+
+            }
+
+
+            product.rating =
+                newRating;
+
+        }
+
+
+        // =================================================
+        // ECO SCORE
+        // =================================================
+
+        if (
+            req.body.ecoScore !== undefined
+        ) {
+
+            const newEcoScore =
+                Number(
+                    req.body.ecoScore
+                );
+
+
+            if (
+                !Number.isFinite(newEcoScore) ||
+                newEcoScore < 0 ||
+                newEcoScore > 100
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Eco Score must be between 0 and 100."
+                });
+
+            }
+
+
+            product.ecoScore =
+                newEcoScore;
+
+        }
+
+
+        // =================================================
+        // DIMENSIONS
+        // =================================================
+
+        if (
+            req.body.dimensions !== undefined
+        ) {
+
+            const dimensions =
+                req.body.dimensions;
+
+
+            const length =
+                Number(
+                    dimensions?.length || 0
+                );
+
+            const width =
+                Number(
+                    dimensions?.width || 0
+                );
+
+            const height =
+                Number(
+                    dimensions?.height || 0
+                );
+
+
+            if (
+                !Number.isFinite(length) ||
+                length < 0 ||
+
+                !Number.isFinite(width) ||
+                width < 0 ||
+
+                !Number.isFinite(height) ||
+                height < 0
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Dimensions must contain valid numbers."
+                });
+
+            }
+
+
+            product.dimensions = {
+
+                length,
+
+                width,
+
+                height,
+
+                unit:
+                    dimensions.unit ||
+                    product.dimensions?.unit ||
+                    "inch"
+
+            };
+
+        }
+
+
+        // =================================================
+        // WEIGHT CAPACITY
+        // =================================================
+
+        if (
+            req.body.weightCapacity !== undefined
+        ) {
+
+            const weightCapacity =
+                req.body.weightCapacity;
+
+
+            const value =
+                Number(
+                    weightCapacity?.value || 0
+                );
+
+
+            if (
+                !Number.isFinite(value) ||
+                value < 0
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Weight capacity must contain a valid number."
+                });
+
+            }
+
+
+            product.weightCapacity = {
+
+                value,
+
+                unit:
+                    weightCapacity.unit ||
+                    product.weightCapacity?.unit ||
+                    "kg"
+
+            };
+
+        }
+
+
+        // =================================================
+        // PRODUCT WEIGHT
+        // =================================================
+
+        if (
+            req.body.productWeight !== undefined
+        ) {
+
+            const productWeight =
+                req.body.productWeight;
+
+
+            const value =
+                Number(
+                    productWeight?.value || 0
+                );
+
+
+            if (
+                !Number.isFinite(value) ||
+                value < 0
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Product weight must contain a valid number."
+                });
+
+            }
+
+
+            product.productWeight = {
+
+                value,
+
+                unit:
+                    productWeight.unit ||
+                    product.productWeight?.unit ||
+                    "g"
+
+            };
+
+        }
 
 
         // =================================================
@@ -393,7 +873,7 @@ exports.updateProduct = async (req, res) => {
 
 
         // =================================================
-        // CALCULATE SELLING PRICE
+        // SELLING PRICE
         // =================================================
 
         const originalPrice =
@@ -430,11 +910,9 @@ exports.updateProduct = async (req, res) => {
             message:
                 "Product updated successfully",
 
-            product:
-                product,
+            product,
 
-            sellingPrice:
-                sellingPrice
+            sellingPrice
 
         });
 
@@ -445,18 +923,11 @@ exports.updateProduct = async (req, res) => {
             error
         );
 
-
         res.status(500).json({
-
             success: false,
-
-            message:
-                error.message
-
+            message: error.message
         });
-
     }
-
 };
 
 
@@ -477,12 +948,8 @@ exports.deleteProduct = async (req, res) => {
         if (!product) {
 
             return res.status(404).json({
-
                 success: false,
-
-                message:
-                    "Product not found"
-
+                message: "Product not found"
             });
 
         }
@@ -505,16 +972,10 @@ exports.deleteProduct = async (req, res) => {
         );
 
         res.status(500).json({
-
             success: false,
-
-            message:
-                error.message
-
+            message: error.message
         });
-
     }
-
 };
 
 
@@ -531,9 +992,9 @@ exports.addStock = async (req, res) => {
         } = req.body;
 
 
-        // -------------------------------------------------
+        // =================================================
         // VALIDATE QUANTITY
-        // -------------------------------------------------
+        // =================================================
 
         if (
             quantity === undefined ||
@@ -542,12 +1003,9 @@ exports.addStock = async (req, res) => {
         ) {
 
             return res.status(400).json({
-
                 success: false,
-
                 message:
                     "Please enter a valid stock quantity."
-
             });
 
         }
@@ -558,26 +1016,21 @@ exports.addStock = async (req, res) => {
 
 
         if (
-            !Number.isInteger(
-                addQuantity
-            )
+            !Number.isInteger(addQuantity)
         ) {
 
             return res.status(400).json({
-
                 success: false,
-
                 message:
                     "Stock quantity must be a whole number."
-
             });
 
         }
 
 
-        // -------------------------------------------------
+        // =================================================
         // FIND PRODUCT
-        // -------------------------------------------------
+        // =================================================
 
         const product =
             await Product.findById(
@@ -588,20 +1041,17 @@ exports.addStock = async (req, res) => {
         if (!product) {
 
             return res.status(404).json({
-
                 success: false,
-
                 message:
                     "Product not found"
-
             });
 
         }
 
 
-        // -------------------------------------------------
+        // =================================================
         // INCREASE STOCK
-        // -------------------------------------------------
+        // =================================================
 
         product.stock +=
             addQuantity;
@@ -617,8 +1067,7 @@ exports.addStock = async (req, res) => {
             message:
                 `${addQuantity} stock added successfully.`,
 
-            product:
-                product
+            product
 
         });
 
@@ -629,16 +1078,11 @@ exports.addStock = async (req, res) => {
             error
         );
 
-
         res.status(500).json({
-
             success: false,
-
             message:
                 error.message
-
         });
-
     }
 
 };

@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
     {
+        // =====================================================
+        // BASIC PRODUCT INFORMATION
+        // =====================================================
+
         name: {
             type: String,
             required: true,
@@ -12,6 +16,22 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+
+        category: {
+            type: String,
+            required: true,
+            trim: true
+        },
+
+        image: {
+            type: String,
+            required: true
+        },
+
+
+        // =====================================================
+        // PRICE & STOCK
+        // =====================================================
 
         price: {
             type: Number,
@@ -26,23 +46,17 @@ const productSchema = new mongoose.Schema(
             max: 100
         },
 
-        category: {
-            type: String,
-            required: true,
-            trim: true
-        },
-
-        image: {
-            type: String,
-            required: true
-        },
-
         stock: {
             type: Number,
             required: true,
             min: 0,
             default: 0
         },
+
+
+        // =====================================================
+        // PRODUCT RATING & ECO INFORMATION
+        // =====================================================
 
         rating: {
             type: Number,
@@ -60,17 +74,93 @@ const productSchema = new mongoose.Schema(
 
         material: {
             type: String,
-            default: ""
+            default: "",
+            trim: true
         },
 
         size: {
             type: String,
-            default: ""
+            default: "",
+            trim: true
+        },
+
+
+        // =====================================================
+        // PRODUCT DIMENSIONS
+        // =====================================================
+
+        dimensions: {
+            length: {
+                type: Number,
+                default: 0,
+                min: 0
+            },
+
+            width: {
+                type: Number,
+                default: 0,
+                min: 0
+            },
+
+            height: {
+                type: Number,
+                default: 0,
+                min: 0
+            },
+
+            unit: {
+                type: String,
+                default: "inch",
+                trim: true
+            }
+        },
+
+
+        // =====================================================
+        // WEIGHT CAPACITY
+        // =====================================================
+
+        weightCapacity: {
+            value: {
+                type: Number,
+                default: 0,
+                min: 0
+            },
+
+            unit: {
+                type: String,
+                default: "kg",
+                trim: true
+            }
+        },
+
+
+        // =====================================================
+        // PRODUCT WEIGHT
+        // =====================================================
+
+        productWeight: {
+            value: {
+                type: Number,
+                default: 0,
+                min: 0
+            },
+
+            unit: {
+                type: String,
+                default: "g",
+                trim: true
+            }
         }
     },
+
     {
         timestamps: true
     }
 );
 
-module.exports = mongoose.model("Product", productSchema);
+
+module.exports = mongoose.model(
+    "Product",
+    productSchema
+);
