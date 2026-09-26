@@ -68,23 +68,28 @@
         <div class="auth-container">
 
 
-            <div style="
-            text-align:center;
-            margin-bottom:25px;
-        ">
+            <!-- ================================================= -->
+            <!-- LOGIN HEADER -->
+            <!-- ================================================= -->
+
+
+            <div id="loginHeader" style="
+                text-align:center;
+                margin-bottom:25px;
+            ">
 
 
                 <div style="
-                width:64px;
-                height:64px;
-                margin:0 auto 15px;
-                display:grid;
-                place-items:center;
-                border-radius:50%;
-                background:#edf6ee;
-                color:#1d7442;
-                font-size:28px;
-            ">
+                    width:64px;
+                    height:64px;
+                    margin:0 auto 15px;
+                    display:grid;
+                    place-items:center;
+                    border-radius:50%;
+                    background:#edf6ee;
+                    color:#1d7442;
+                    font-size:28px;
+                ">
 
                     <i class="fa-solid fa-user"></i>
 
@@ -97,10 +102,10 @@
 
 
                 <p style="
-                color:#68766e;
-                font-size:14px;
-                margin-top:5px;
-            ">
+                    color:#68766e;
+                    font-size:14px;
+                    margin-top:5px;
+                ">
 
                     Login to continue to EcoBag Shop
 
@@ -120,12 +125,12 @@
 
 
                 <label style="
-                display:block;
-                margin-bottom:7px;
-                color:#183b25;
-                font-size:13px;
-                font-weight:700;
-            ">
+                    display:block;
+                    margin-bottom:7px;
+                    color:#183b25;
+                    font-size:13px;
+                    font-weight:700;
+                ">
 
                     Email Address
 
@@ -133,16 +138,16 @@
 
 
                 <div style="
-                position:relative;
-            ">
+                    position:relative;
+                ">
 
 
                     <i class="fa-solid fa-envelope" style="
-                    position:absolute;
-                    left:14px;
-                    top:15px;
-                    color:#78907e;
-                ">
+                        position:absolute;
+                        left:14px;
+                        top:15px;
+                        color:#78907e;
+                    ">
                     </i>
 
 
@@ -155,12 +160,12 @@
 
 
                 <label style="
-                display:block;
-                margin:15px 0 7px;
-                color:#183b25;
-                font-size:13px;
-                font-weight:700;
-            ">
+                    display:block;
+                    margin:15px 0 7px;
+                    color:#183b25;
+                    font-size:13px;
+                    font-weight:700;
+                ">
 
                     Password
 
@@ -168,22 +173,48 @@
 
 
                 <div style="
-                position:relative;
-            ">
+                    position:relative;
+                ">
 
 
                     <i class="fa-solid fa-lock" style="
-                    position:absolute;
-                    left:14px;
-                    top:15px;
-                    color:#78907e;
-                ">
+                        position:absolute;
+                        left:14px;
+                        top:15px;
+                        color:#78907e;
+                    ">
                     </i>
 
 
                     <input type="password" id="password" name="password" placeholder="Enter your password" required
                         style="padding-left:42px;">
 
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- FORGOT PASSWORD -->
+                <!-- ================================================= -->
+
+
+                <div style="
+                    text-align:right;
+                    margin-top:10px;
+                ">
+
+                    <button type="button" id="forgotPasswordButton" style="
+                            background:none;
+                            border:none;
+                            padding:0;
+                            color:#1d7442;
+                            font-size:13px;
+                            font-weight:700;
+                            cursor:pointer;
+                        ">
+
+                        Forgot Password?
+
+                    </button>
 
                 </div>
 
@@ -203,7 +234,7 @@
 
 
             <!-- ================================================= -->
-            <!-- OTP SECTION -->
+            <!-- LOGIN OTP SECTION -->
             <!-- ================================================= -->
 
 
@@ -218,24 +249,24 @@
 
 
                 <div style="
-                text-align:center;
-                margin-bottom:15px;
-            ">
+                    text-align:center;
+                    margin-bottom:15px;
+                ">
 
 
                     <i class="fa-solid fa-envelope-circle-check" style="
-                    font-size:32px;
-                    color:#1d7442;
-                    margin-bottom:10px;
-                ">
+                        font-size:32px;
+                        color:#1d7442;
+                        margin-bottom:10px;
+                    ">
                     </i>
 
 
                     <h2 style="
-                    margin:5px 0;
-                    color:#183b25;
-                    font-size:20px;
-                ">
+                        margin:5px 0;
+                        color:#183b25;
+                        font-size:20px;
+                    ">
 
                         Verify Your Email
 
@@ -243,9 +274,9 @@
 
 
                     <p style="
-                    color:#68766e;
-                    font-size:13px;
-                ">
+                        color:#68766e;
+                        font-size:13px;
+                    ">
 
                         A 6-digit OTP has been
                         sent to your email.
@@ -258,12 +289,12 @@
 
 
                 <label style="
-                display:block;
-                margin-bottom:7px;
-                color:#183b25;
-                font-size:13px;
-                font-weight:700;
-            ">
+                    display:block;
+                    margin-bottom:7px;
+                    color:#183b25;
+                    font-size:13px;
+                    font-weight:700;
+                ">
 
                     Enter OTP
 
@@ -272,19 +303,19 @@
 
                 <input type="text" id="otp" maxlength="6" inputmode="numeric" autocomplete="one-time-code"
                     placeholder="Enter 6-digit OTP" style="
-                    width:100%;
-                    box-sizing:border-box;
-                    text-align:center;
-                    letter-spacing:8px;
-                    font-size:22px;
-                    font-weight:bold;
-                ">
+                        width:100%;
+                        box-sizing:border-box;
+                        text-align:center;
+                        letter-spacing:8px;
+                        font-size:22px;
+                        font-weight:bold;
+                    ">
 
 
                 <button type="button" id="verifyOTPButton" style="
-                    width:100%;
-                    margin-top:15px;
-                ">
+                        width:100%;
+                        margin-top:15px;
+                    ">
 
                     <i class="fa-solid fa-circle-check"></i>
 
@@ -294,12 +325,12 @@
 
 
                 <button type="button" id="resendOTPButton" style="
-                    width:100%;
-                    margin-top:10px;
-                    background:#ffffff;
-                    color:#1d7442;
-                    border:1px solid #1d7442;
-                ">
+                        width:100%;
+                        margin-top:10px;
+                        background:#ffffff;
+                        color:#1d7442;
+                        border:1px solid #1d7442;
+                    ">
 
                     <i class="fa-solid fa-rotate"></i>
 
@@ -309,11 +340,11 @@
 
 
                 <p style="
-                text-align:center;
-                color:#777;
-                font-size:12px;
-                margin-top:12px;
-            ">
+                    text-align:center;
+                    color:#777;
+                    font-size:12px;
+                    margin-top:12px;
+                ">
 
                     OTP is valid for 5 minutes.
 
@@ -324,8 +355,311 @@
 
 
 
-            <!-- MESSAGE -->
+            <!-- ================================================= -->
+            <!-- FORGOT PASSWORD SECTION -->
+            <!-- ================================================= -->
 
+
+            <div id="forgotPasswordSection" style="
+                display:none;
+                margin-top:25px;
+                padding:20px;
+                background:#f4faf5;
+                border:1px solid #d7eadb;
+                border-radius:12px;
+            ">
+
+
+                <!-- RESET EMAIL STEP -->
+
+                <div id="resetEmailStep">
+
+
+                    <div style="
+                        text-align:center;
+                        margin-bottom:15px;
+                    ">
+
+                        <i class="fa-solid fa-key" style="
+                            font-size:32px;
+                            color:#1d7442;
+                            margin-bottom:10px;
+                        ">
+                        </i>
+
+
+                        <h2 style="
+                            margin:5px 0;
+                            color:#183b25;
+                            font-size:20px;
+                        ">
+
+                            Reset Your Password
+
+                        </h2>
+
+
+                        <p style="
+                            color:#68766e;
+                            font-size:13px;
+                        ">
+
+                            Enter your registered email
+                            to receive a password reset OTP.
+
+                        </p>
+
+                    </div>
+
+
+
+                    <label style="
+                        display:block;
+                        margin-bottom:7px;
+                        color:#183b25;
+                        font-size:13px;
+                        font-weight:700;
+                    ">
+
+                        Email Address
+
+                    </label>
+
+
+                    <input type="email" id="resetEmail" placeholder="Enter your registered email" style="
+                            width:100%;
+                            box-sizing:border-box;
+                        ">
+
+
+                    <button type="button" id="sendResetOTPButton" style="
+                            width:100%;
+                            margin-top:15px;
+                        ">
+
+                        <i class="fa-solid fa-paper-plane"></i>
+
+                        &nbsp; Send Reset OTP
+
+                    </button>
+
+
+                    <button type="button" id="backToLoginFromEmail" style="
+                            width:100%;
+                            margin-top:10px;
+                            background:#ffffff;
+                            color:#1d7442;
+                            border:1px solid #1d7442;
+                        ">
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        &nbsp; Back to Login
+
+                    </button>
+
+                </div>
+
+
+
+                <!-- RESET OTP STEP -->
+
+                <div id="resetOTPStep" style="display:none;">
+
+
+                    <div style="
+                        text-align:center;
+                        margin-bottom:15px;
+                    ">
+
+                        <i class="fa-solid fa-shield-halved" style="
+                            font-size:32px;
+                            color:#1d7442;
+                            margin-bottom:10px;
+                        ">
+                        </i>
+
+
+                        <h2 style="
+                            margin:5px 0;
+                            color:#183b25;
+                            font-size:20px;
+                        ">
+
+                            Verify Reset OTP
+
+                        </h2>
+
+
+                        <p style="
+                            color:#68766e;
+                            font-size:13px;
+                        ">
+
+                            Enter the 6-digit OTP
+                            sent to your email.
+
+                        </p>
+
+                    </div>
+
+
+
+                    <input type="text" id="resetOTP" maxlength="6" inputmode="numeric" autocomplete="one-time-code"
+                        placeholder="Enter 6-digit OTP" style="
+                            width:100%;
+                            box-sizing:border-box;
+                            text-align:center;
+                            letter-spacing:8px;
+                            font-size:22px;
+                            font-weight:bold;
+                        ">
+
+
+                    <button type="button" id="verifyResetOTPButton" style="
+                            width:100%;
+                            margin-top:15px;
+                        ">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                        &nbsp; Verify OTP
+
+                    </button>
+
+
+                    <button type="button" id="backToLoginFromResetOTP" style="
+                            width:100%;
+                            margin-top:10px;
+                            background:#ffffff;
+                            color:#1d7442;
+                            border:1px solid #1d7442;
+                        ">
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        &nbsp; Back to Login
+
+                    </button>
+
+                </div>
+
+
+
+                <!-- NEW PASSWORD STEP -->
+
+                <div id="newPasswordStep" style="display:none;">
+
+
+                    <div style="
+                        text-align:center;
+                        margin-bottom:15px;
+                    ">
+
+                        <i class="fa-solid fa-lock-open" style="
+                            font-size:32px;
+                            color:#1d7442;
+                            margin-bottom:10px;
+                        ">
+                        </i>
+
+
+                        <h2 style="
+                            margin:5px 0;
+                            color:#183b25;
+                            font-size:20px;
+                        ">
+
+                            Create New Password
+
+                        </h2>
+
+
+                        <p style="
+                            color:#68766e;
+                            font-size:13px;
+                        ">
+
+                            Enter your new password below.
+
+                        </p>
+
+                    </div>
+
+
+
+                    <label style="
+                        display:block;
+                        margin-bottom:7px;
+                        color:#183b25;
+                        font-size:13px;
+                        font-weight:700;
+                    ">
+
+                        New Password
+
+                    </label>
+
+
+                    <input type="password" id="newPassword" placeholder="Enter new password" minlength="6" style="
+                            width:100%;
+                            box-sizing:border-box;
+                        ">
+
+
+                    <label style="
+                        display:block;
+                        margin:15px 0 7px;
+                        color:#183b25;
+                        font-size:13px;
+                        font-weight:700;
+                    ">
+
+                        Confirm New Password
+
+                    </label>
+
+
+                    <input type="password" id="confirmNewPassword" placeholder="Confirm new password" minlength="6"
+                        style="
+                            width:100%;
+                            box-sizing:border-box;
+                        ">
+
+
+                    <button type="button" id="resetPasswordButton" style="
+                            width:100%;
+                            margin-top:15px;
+                        ">
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        &nbsp; Reset Password
+
+                    </button>
+
+
+                    <button type="button" id="backToLoginFromNewPassword" style="
+                            width:100%;
+                            margin-top:10px;
+                            background:#ffffff;
+                            color:#1d7442;
+                            border:1px solid #1d7442;
+                        ">
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        &nbsp; Back to Login
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- MESSAGE -->
 
             <div id="message" style="
                 margin-top:15px;
@@ -338,19 +672,19 @@
 
 
             <div style="
-            height:1px;
-            background:#e2e8e2;
-            margin:25px 0;
-        ">
+                height:1px;
+                background:#e2e8e2;
+                margin:25px 0;
+            ">
             </div>
 
 
 
             <p style="
-            text-align:center;
-            color:#68766e;
-            font-size:14px;
-        ">
+                text-align:center;
+                color:#68766e;
+                font-size:14px;
+            ">
 
                 Don't have an account?
 

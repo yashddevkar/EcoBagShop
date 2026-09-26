@@ -1,5 +1,5 @@
 // =====================================================
-// ECOBAG SHOP - LOGIN + OTP
+// ECOBAG SHOP - LOGIN + OTP + FORGOT PASSWORD
 // =====================================================
 
 
@@ -18,7 +18,7 @@ const API =
 
 
 // =====================================================
-// ELEMENTS
+// LOGIN ELEMENTS
 // =====================================================
 
 const form =
@@ -40,7 +40,70 @@ const resendOTPButton =
     document.getElementById("resendOTPButton");
 
 
+// =====================================================
+// FORGOT PASSWORD ELEMENTS
+// =====================================================
+
+const forgotPasswordButton =
+    document.getElementById("forgotPasswordButton");
+
+const forgotPasswordSection =
+    document.getElementById("forgotPasswordSection");
+
+const resetEmailStep =
+    document.getElementById("resetEmailStep");
+
+const resetOTPStep =
+    document.getElementById("resetOTPStep");
+
+const newPasswordStep =
+    document.getElementById("newPasswordStep");
+
+const resetEmailInput =
+    document.getElementById("resetEmail");
+
+const sendResetOTPButton =
+    document.getElementById("sendResetOTPButton");
+
+const resetOTPInput =
+    document.getElementById("resetOTP");
+
+const verifyResetOTPButton =
+    document.getElementById("verifyResetOTPButton");
+
+const newPasswordInput =
+    document.getElementById("newPassword");
+
+const confirmNewPasswordInput =
+    document.getElementById("confirmNewPassword");
+
+const resetPasswordButton =
+    document.getElementById("resetPasswordButton");
+
+const backToLoginFromEmail =
+    document.getElementById("backToLoginFromEmail");
+
+const backToLoginFromResetOTP =
+    document.getElementById("backToLoginFromResetOTP");
+
+const backToLoginFromNewPassword =
+    document.getElementById("backToLoginFromNewPassword");
+
+
+// =====================================================
+// LOGIN STATE
+// =====================================================
+
 let loginEmail = "";
+
+
+// =====================================================
+// PASSWORD RESET STATE
+// =====================================================
+
+let resetEmail = "";
+
+let resetOTP = "";
 
 
 // =====================================================
@@ -74,7 +137,6 @@ async function readResponse(response) {
             "Invalid server response:",
             text
         );
-
 
         return {
             success: false,
@@ -294,7 +356,7 @@ if (form) {
 
 
 // =====================================================
-// VERIFY OTP
+// VERIFY LOGIN OTP
 // =====================================================
 
 if (verifyOTPButton) {
@@ -518,7 +580,7 @@ if (verifyOTPButton) {
 
 
 // =====================================================
-// RESEND OTP
+// RESEND LOGIN OTP
 // =====================================================
 
 if (resendOTPButton) {
@@ -636,6 +698,761 @@ if (resendOTPButton) {
                     "Unable to resend OTP. Please try again.";
 
             }
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// FORGOT PASSWORD - OPEN
+// =====================================================
+
+if (forgotPasswordButton) {
+
+    forgotPasswordButton.addEventListener(
+        "click",
+        () => {
+
+            // Hide login form
+
+            if (form) {
+
+                form.style.display =
+                    "none";
+
+            }
+
+
+            // Hide login OTP
+
+            if (otpSection) {
+
+                otpSection.style.display =
+                    "none";
+
+            }
+
+
+            // Show forgot password section
+
+            if (forgotPasswordSection) {
+
+                forgotPasswordSection.style.display =
+                    "block";
+
+            }
+
+
+            // Show first reset step
+
+            if (resetEmailStep) {
+
+                resetEmailStep.style.display =
+                    "block";
+
+            }
+
+            if (resetOTPStep) {
+
+                resetOTPStep.style.display =
+                    "none";
+
+            }
+
+            if (newPasswordStep) {
+
+                newPasswordStep.style.display =
+                    "none";
+
+            }
+
+
+            // Clear previous values
+
+            if (resetEmailInput) {
+
+                resetEmailInput.value = "";
+
+                resetEmailInput.focus();
+
+            }
+
+
+            if (resetOTPInput) {
+
+                resetOTPInput.value = "";
+
+            }
+
+
+            if (newPasswordInput) {
+
+                newPasswordInput.value = "";
+
+            }
+
+
+            if (confirmNewPasswordInput) {
+
+                confirmNewPasswordInput.value = "";
+
+            }
+
+
+            message.style.color =
+                "#1d7442";
+
+            message.textContent =
+                "";
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// SEND PASSWORD RESET OTP
+// =====================================================
+
+if (sendResetOTPButton) {
+
+    sendResetOTPButton.addEventListener(
+        "click",
+        async () => {
+
+            const email =
+                resetEmailInput
+                    ? resetEmailInput.value
+                        .trim()
+                        .toLowerCase()
+                    : "";
+
+
+            if (!email) {
+
+                message.style.color =
+                    "red";
+
+                message.textContent =
+                    "Please enter your email.";
+
+                return;
+
+            }
+
+
+            resetEmail =
+                email;
+
+
+            message.style.color =
+                "#1d7442";
+
+            message.textContent =
+                "Sending password reset OTP...";
+
+
+            sendResetOTPButton.disabled =
+                true;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API}/auth/forgot-password`,
+                        {
+
+                            method: "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    email:
+                                        resetEmail
+
+                                })
+
+                        }
+                    );
+
+
+                const data =
+                    await readResponse(
+                        response
+                    );
+
+
+                console.log(
+                    "Forgot password response:",
+                    data
+                );
+
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+
+                    message.style.color =
+                        "red";
+
+                    message.textContent =
+                        data.message ||
+                        "Unable to send password reset OTP.";
+
+                    return;
+
+                }
+
+
+                message.style.color =
+                    "#1d7442";
+
+                message.textContent =
+                    data.message ||
+                    "Password reset OTP sent to your email.";
+
+
+                // Move to OTP step
+
+                if (resetEmailStep) {
+
+                    resetEmailStep.style.display =
+                        "none";
+
+                }
+
+                if (resetOTPStep) {
+
+                    resetOTPStep.style.display =
+                        "block";
+
+                }
+
+
+                if (resetOTPInput) {
+
+                    resetOTPInput.value = "";
+
+                    resetOTPInput.focus();
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Forgot Password Error:",
+                    error
+                );
+
+
+                message.style.color =
+                    "red";
+
+                message.textContent =
+                    "Unable to connect to server. Please try again.";
+
+            } finally {
+
+                sendResetOTPButton.disabled =
+                    false;
+
+            }
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// VERIFY PASSWORD RESET OTP
+// =====================================================
+
+if (verifyResetOTPButton) {
+
+    verifyResetOTPButton.addEventListener(
+        "click",
+        async () => {
+
+            const otp =
+                resetOTPInput
+                    ? resetOTPInput.value.trim()
+                    : "";
+
+
+            if (!resetEmail) {
+
+                message.style.color =
+                    "red";
+
+                message.textContent =
+                    "Please enter your email first.";
+
+                return;
+
+            }
+
+
+            if (!otp) {
+
+                message.style.color =
+                    "red";
+
+                message.textContent =
+                    "Please enter the OTP.";
+
+                return;
+
+            }
+
+
+            if (
+                !/^\d{6}$/.test(otp)
+            ) {
+
+                message.style.color =
+                    "red";
+
+                message.textContent =
+                    "OTP must contain 6 digits.";
+
+                return;
+
+            }
+
+
+            message.style.color =
+                "#1d7442";
+
+            message.textContent =
+                "Verifying reset OTP...";
+
+
+            verifyResetOTPButton.disabled =
+                true;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API}/auth/verify-reset-otp`,
+                        {
+
+                            method: "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    email:
+                                        resetEmail,
+
+                                    otp:
+                                        otp
+
+                                })
+
+                        }
+                    );
+
+
+                const data =
+                    await readResponse(
+                        response
+                    );
+
+
+                console.log(
+                    "Reset OTP response:",
+                    data
+                );
+
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+
+                    message.style.color =
+                        "red";
+
+                    message.textContent =
+                        data.message ||
+                        "Invalid reset OTP.";
+
+                    return;
+
+                }
+
+
+                // Save OTP for final password reset
+
+                resetOTP =
+                    otp;
+
+
+                message.style.color =
+                    "#1d7442";
+
+                message.textContent =
+                    "OTP verified successfully.";
+
+
+                // Move to new password step
+
+                if (resetOTPStep) {
+
+                    resetOTPStep.style.display =
+                        "none";
+
+                }
+
+                if (newPasswordStep) {
+
+                    newPasswordStep.style.display =
+                        "block";
+
+                }
+
+
+                if (newPasswordInput) {
+
+                    newPasswordInput.value = "";
+
+                    newPasswordInput.focus();
+
+                }
+
+
+                if (confirmNewPasswordInput) {
+
+                    confirmNewPasswordInput.value = "";
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Reset OTP Verification Error:",
+                    error
+                );
+
+
+                message.style.color =
+                    "red";
+
+                message.textContent =
+                    "Unable to verify reset OTP. Please try again.";
+
+            } finally {
+
+                verifyResetOTPButton.disabled =
+                    false;
+
+            }
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// RESET PASSWORD
+// =====================================================
+
+if (resetPasswordButton) {
+
+    resetPasswordButton.addEventListener(
+        "click",
+        async () => {
+
+            const newPassword =
+                newPasswordInput
+                    ? newPasswordInput.value
+                    : "";
+
+
+            const confirmPassword =
+                confirmNewPasswordInput
+                    ? confirmNewPasswordInput.value
+                    : "";
+
+
+            if (!resetEmail || !resetOTP) {
+
+                message.style.color =
+                    "red";
+
+                message.textContent =
+                    "Please complete OTP verification first.";
+
+                return;
+
+            }
+
+
+            if (!newPassword) {
+
+                message.style.color =
+                    "red";
+
+                message.textContent =
+                    "Please enter a new password.";
+
+                return;
+
+            }
+
+
+            if (newPassword.length < 6) {
+
+                message.style.color =
+                    "red";
+
+                message.textContent =
+                    "Password must be at least 6 characters.";
+
+                return;
+
+            }
+
+
+            if (newPassword !== confirmPassword) {
+
+                message.style.color =
+                    "red";
+
+                message.textContent =
+                    "Passwords do not match.";
+
+                return;
+
+            }
+
+
+            message.style.color =
+                "#1d7442";
+
+            message.textContent =
+                "Updating your password...";
+
+
+            resetPasswordButton.disabled =
+                true;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API}/auth/reset-password`,
+                        {
+
+                            method: "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    email:
+                                        resetEmail,
+
+                                    otp:
+                                        resetOTP,
+
+                                    newPassword:
+                                        newPassword
+
+                                })
+
+                        }
+                    );
+
+
+                const data =
+                    await readResponse(
+                        response
+                    );
+
+
+                console.log(
+                    "Reset password response:",
+                    data
+                );
+
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+
+                    message.style.color =
+                        "red";
+
+                    message.textContent =
+                        data.message ||
+                        "Unable to reset password.";
+
+                    return;
+
+                }
+
+
+                message.style.color =
+                    "#1d7442";
+
+                message.textContent =
+                    "Password reset successfully! Redirecting to login...";
+
+
+                // Clear reset state
+
+                resetEmail =
+                    "";
+
+                resetOTP =
+                    "";
+
+
+                if (resetEmailInput) {
+
+                    resetEmailInput.value = "";
+
+                }
+
+                if (resetOTPInput) {
+
+                    resetOTPInput.value = "";
+
+                }
+
+                if (newPasswordInput) {
+
+                    newPasswordInput.value = "";
+
+                }
+
+                if (confirmNewPasswordInput) {
+
+                    confirmNewPasswordInput.value = "";
+
+                }
+
+
+                // Return to login after successful reset
+
+                setTimeout(
+                    () => {
+
+                        window.location.reload();
+
+                    },
+                    1200
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Reset Password Error:",
+                    error
+                );
+
+
+                message.style.color =
+                    "red";
+
+                message.textContent =
+                    "Unable to reset password. Please try again.";
+
+            } finally {
+
+                resetPasswordButton.disabled =
+                    false;
+
+            }
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// BACK TO LOGIN - EMAIL STEP
+// =====================================================
+
+if (backToLoginFromEmail) {
+
+    backToLoginFromEmail.addEventListener(
+        "click",
+        () => {
+
+            window.location.reload();
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// BACK TO LOGIN - RESET OTP STEP
+// =====================================================
+
+if (backToLoginFromResetOTP) {
+
+    backToLoginFromResetOTP.addEventListener(
+        "click",
+        () => {
+
+            window.location.reload();
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// BACK TO LOGIN - NEW PASSWORD STEP
+// =====================================================
+
+if (backToLoginFromNewPassword) {
+
+    backToLoginFromNewPassword.addEventListener(
+        "click",
+        () => {
+
+            window.location.reload();
 
         }
     );
