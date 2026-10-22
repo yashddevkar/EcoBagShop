@@ -356,15 +356,10 @@ exports.createOrder = async (
         // DELIVERY
         // =================================================
 
-        const deliveryCharge =
-            subtotal >= 500
-                ? 0
-                : 50;
 
+        const deliveryCharge = 0;
 
-        const totalAmount =
-            subtotal +
-            deliveryCharge;
+        const totalAmount = subtotal + deliveryCharge;
 
 
         // =================================================
