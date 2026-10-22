@@ -678,80 +678,37 @@ function createNormalProductHTML(
 // UPDATE TOTALS
 // =====================================================
 
-function updateTotals(
-    subtotal
-) {
 
+// =====================================================
+// UPDATE TOTALS
+// =====================================================
 
-    let delivery =
-        0;
+function updateTotals(subtotal) {
 
+    // FREE DELIVERY ON EVERY ORDER
+    const delivery = 0;
 
-    // ================================================
-    // FREE DELIVERY ABOVE ₹500
-    // ================================================
+    const total = subtotal + delivery;
 
-    if (
-        subtotal > 0 &&
-        subtotal < 500
-    ) {
-
-        delivery =
-            50;
-
-    }
-
-
-    const total =
-        subtotal +
-        delivery;
-
-
-    // ================================================
     // SUBTOTAL
-    // ================================================
-
     if (subtotalElement) {
-
         subtotalElement.textContent =
-            `₹${subtotal}`;
-
+            `₹${subtotal.toLocaleString("en-IN")}`;
     }
 
-
-    // ================================================
     // DELIVERY
-    // ================================================
-
     if (deliveryElement) {
-
-        if (delivery === 0) {
-
-            deliveryElement.textContent =
-                "FREE";
-
-        } else {
-
-            deliveryElement.textContent =
-                `₹${delivery}`;
-
-        }
-
+        deliveryElement.textContent = "FREE";
     }
 
-
-    // ================================================
     // TOTAL
-    // ================================================
-
     if (totalElement) {
-
         totalElement.textContent =
-            `₹${total}`;
-
+            `₹${total.toLocaleString("en-IN")}`;
     }
 
 }
+
 
 
 // =====================================================
